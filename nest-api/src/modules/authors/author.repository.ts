@@ -1,6 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { AuthorModel, CreateAuthorModel } from "./author.model";
-import { AuthorEntity } from "./author.entity";
+import {
+  AuthorModel,
+  CreateAuthorModel,
+  FilterAuthorModel,
+} from "./author.model";
+import { AuthorEntity, AuthorId } from "./author.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -11,8 +15,30 @@ export class AuthorRepository {
     private readonly authorRepository: Repository<AuthorEntity>,
   ) {}
 
-  public async getAllAuthors(): Promise<AuthorModel[]> {
-    return this.authorRepository.find();
+  public async getAllAuthors(
+    input?: FilterAuthorModel,
+  ): Promise<[AuthorModel[], number]> {
+    const [authors, totalCount] = await this.authorRepository.findAndCount({
+      take: input?.limit,
+      skip: input?.offset,
+      order: input?.sort,
+    });
+
+    return [authors, totalCount];
+  }
+
+  public async getAuthorById(id: string): Promise<AuthorModel | undefined> {
+    const author = await this.authorRepository.findOne({
+      where: { id: id as AuthorId },
+    });
+
+    if (!author) {
+      return undefined;
+    }
+
+    return {
+      ...author,
+    };
   }
 
   public async createAuthor(author: CreateAuthorModel): Promise<AuthorModel> {
