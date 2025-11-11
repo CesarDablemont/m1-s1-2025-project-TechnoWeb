@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
- // TEST PUSH GIT HUB
+// TEST PUSH GIT HUB
 describe('AppController', () => {
   let appController: AppController;
 
