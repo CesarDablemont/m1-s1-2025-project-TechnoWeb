@@ -3,6 +3,7 @@ import {
   AuthorModel,
   CreateAuthorModel,
   FilterAuthorModel,
+  UpdateAuthorModel,
 } from "./author.model";
 import { AuthorRepository } from "./author.repository";
 
@@ -22,5 +23,21 @@ export class AuthorService {
 
   public async createAuthor(author: CreateAuthorModel): Promise<AuthorModel> {
     return this.authorRepository.createAuthor(author);
+  }
+
+  public async updateAuthor(
+    id: string,
+    author: UpdateAuthorModel,
+  ): Promise<AuthorModel | undefined> {
+    const oldAuthor = await this.getAuthorById(id);
+    if (!oldAuthor) {
+      return undefined;
+    }
+
+    return this.authorRepository.updateAuthor(id, author);
+  }
+
+  public async deleteAuthor(id: string): Promise<void> {
+    await this.authorRepository.deleteAuthor(id);
   }
 }

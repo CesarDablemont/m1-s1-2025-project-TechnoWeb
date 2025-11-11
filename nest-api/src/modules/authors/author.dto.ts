@@ -8,6 +8,16 @@ export class CreateAuthorDto {
   lastName: string;
 }
 
+export class UpdateAuthorDto {
+  @IsString()
+  @IsOptional()
+  firstName: string;
+
+  @IsString()
+  @IsOptional()
+  lastName: string;
+}
+
 export class GetAuthorsDto {
   @IsInt()
   @Min(1)
