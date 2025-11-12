@@ -109,7 +109,7 @@ export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemPro
             <EditOutlined />
           </Button>
         )}
-        <Button type="primary" danger onClick={() => onDelete(client.id)}>
+        <Button type="primary" color='blue' onClick={() => onDelete(client.id)}>
           <DeleteOutlined />
         </Button>
       </Col>

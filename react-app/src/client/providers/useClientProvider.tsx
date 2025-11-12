@@ -7,7 +7,7 @@ export const useClientProvider = () => {
 
   const loadClients = () => {
     axios
-      .get('http://localhost:5173/client')
+      .get('http://localhost:3000/clients')
       .then(data => {
         setClients(data.data.data)
       })
@@ -16,7 +16,7 @@ export const useClientProvider = () => {
 
   const createClient = (clients: CreateClientModel) => {
     axios
-      .post('http://localhost:5173/client', clients)
+      .post('http://localhost:3000/clients', clients)
       .then(() => {
         loadClients()
       })
@@ -25,7 +25,7 @@ export const useClientProvider = () => {
 
   const updateClient = (id: string, input: UpdateClientModel) => {
     axios
-      .patch(`http://localhost:5173/client/${id}`, input)
+      .patch(`http://localhost:3000/clients/${id}`, input)
       .then(() => {
         loadClients()
       })
@@ -34,7 +34,7 @@ export const useClientProvider = () => {
 
   const deleteClient = (id: string) => {
     axios
-      .delete(`http://localhost:5173/client/${id}`)
+      .delete(`http://localhost:3000/clients/${id}`)
       .then(() => {
         loadClients()
       })
