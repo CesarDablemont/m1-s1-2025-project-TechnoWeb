@@ -1,49 +1,41 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
-import { ClientEntity } from './entities/client.entity';
+import { Injectable } from '@nestjs/common';
+import {
+  ClientModel,
+  CreateClientModel,
+  FilterClientsModel,
+  UpdateClientModel,
+  ClientModelWithSalesCount,
+} from './clients.model';
+
+import { SaleModel } from '../sales/sales.model';
+import { ClientRepository } from './clients.respository';
 
 @Injectable()
 export class ClientsService {
-  constructor(
-    @InjectRepository(ClientEntity)
-    private readonly clientRepo: Repository<ClientEntity>,
-  ) {}
+  constructor(private readonly clientRepository: ClientRepository) {}
 
-  async create(createClientDto: CreateClientDto) {
-    const client = this.clientRepo.create(
-      createClientDto as Partial<ClientEntity>,
-    );
-    return this.clientRepo.save(client);
+  public async getAllClients(
+    input?: FilterClientsModel,
+  ): Promise<ClientModelWithSalesCount[]> {
+    return this.clientRepository.getAllClients(input);
   }
 
-  async findAll() {
-    return this.clientRepo.find({
-      order: { lastName: 'ASC', firstName: 'ASC' },
-    });
+  public async getClientById(id: string): Promise<ClientModel & { sales: SaleModel[] }>  {
+    return this.clientRepository.getClientById(id);
   }
 
-  async findOne(id: string) {
-    const client = await this.clientRepo.findOne({ where: { id } });
-    if (!client) throw new NotFoundException(`Client ${id} not found`);
-    return client;
+  public async createClient(client: CreateClientModel): Promise<ClientModel> {
+    return this.clientRepository.createClient(client);
   }
 
-  async update(id: string, updateClientDto: UpdateClientDto) {
-    const client = await this.clientRepo.preload({
-      id,
-      ...(updateClientDto as Partial<ClientEntity>),
-    });
-    if (!client) throw new NotFoundException(`Client ${id} not found`);
-    return this.clientRepo.save(client);
+  public async updateClient(
+    id: string,
+    client: UpdateClientModel,
+  ): Promise<ClientModel> {
+    return this.clientRepository.updateClient(id, client);
   }
 
-  async remove(id: string) {
-    const result = await this.clientRepo.delete(id);
-    if (result.affected === 0)
-      throw new NotFoundException(`Client ${id} not found`);
-    return { deleted: true };
+  public async deleteClient(id: string): Promise<void> {
+    await this.clientRepository.deleteClient(id);
   }
 }

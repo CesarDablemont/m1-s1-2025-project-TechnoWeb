@@ -1,16 +1,11 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+export type ClientId = string & { __brand: 'Client' };
 
 @Entity('clients')
 export class ClientEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: ClientId;
 
   @Column({ name: 'first_name', type: 'varchar' })
   firstName: string;
@@ -23,10 +18,4 @@ export class ClientEntity extends BaseEntity {
 
   @Column({ name: 'photo_url', type: 'varchar', nullable: true })
   photoUrl?: string;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
 }
