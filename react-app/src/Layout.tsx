@@ -12,6 +12,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
+
   const items: Required<MenuProps>['items'] = [
     {
       label: <Link to={indexRoute.to}>Home</Link>,
