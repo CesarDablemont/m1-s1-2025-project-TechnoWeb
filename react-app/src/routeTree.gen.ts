@@ -15,9 +15,9 @@ import { Route as AuthorRouteImport } from './routes/author'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BooksIndexRouteImport } from './routes/books/index'
-import { Route as BooksBookIdRouteImport } from './routes/books.$bookId'
-import { Route as ClientIndexRouteImport } from './routes/client/indexclient'
+import { Route as ClientIndexclientRouteImport } from './routes/client/indexclient'
 import { Route as ClientClientIdRouteImport } from './routes/client.$clientId'
+import { Route as BooksBookIdRouteImport } from './routes/books.$bookId'
 
 const ClientRoute = ClientRouteImport.update({
   id: '/client',
@@ -49,20 +49,20 @@ const BooksIndexRoute = BooksIndexRouteImport.update({
   path: '/',
   getParentRoute: () => BooksRoute,
 } as any)
-const ClientIndexRoute = ClientIndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ClientIndexclientRoute = ClientIndexclientRouteImport.update({
+  id: '/indexclient',
+  path: '/indexclient',
+  getParentRoute: () => ClientRoute,
+} as any)
+const ClientClientIdRoute = ClientClientIdRouteImport.update({
+  id: '/$clientId',
+  path: '/$clientId',
   getParentRoute: () => ClientRoute,
 } as any)
 const BooksBookIdRoute = BooksBookIdRouteImport.update({
   id: '/$bookId',
   path: '/$bookId',
   getParentRoute: () => BooksRoute,
-} as any)
-const ClientClientIdRoute = ClientClientIdRouteImport.update({
-  id: '/$clientId',
-  path: '/$clientId',
-  getParentRoute: () => ClientRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -73,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/client': typeof ClientRouteWithChildren
   '/books/$bookId': typeof BooksBookIdRoute
   '/client/$clientId': typeof ClientClientIdRoute
+  '/client/indexclient': typeof ClientIndexclientRoute
   '/books/': typeof BooksIndexRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +83,7 @@ export interface FileRoutesByTo {
   '/client': typeof ClientRouteWithChildren
   '/books/$bookId': typeof BooksBookIdRoute
   '/client/$clientId': typeof ClientClientIdRoute
+  '/client/indexclient': typeof ClientIndexclientRoute
   '/books': typeof BooksIndexRoute
 }
 export interface FileRoutesById {
@@ -93,6 +95,7 @@ export interface FileRoutesById {
   '/client': typeof ClientRouteWithChildren
   '/books/$bookId': typeof BooksBookIdRoute
   '/client/$clientId': typeof ClientClientIdRoute
+  '/client/indexclient': typeof ClientIndexclientRoute
   '/books/': typeof BooksIndexRoute
 }
 export interface FileRouteTypes {
@@ -105,6 +108,7 @@ export interface FileRouteTypes {
     | '/client'
     | '/books/$bookId'
     | '/client/$clientId'
+    | '/client/indexclient'
     | '/books/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -114,6 +118,7 @@ export interface FileRouteTypes {
     | '/client'
     | '/books/$bookId'
     | '/client/$clientId'
+    | '/client/indexclient'
     | '/books'
   id:
     | '__root__'
@@ -123,7 +128,8 @@ export interface FileRouteTypes {
     | '/books'
     | '/client'
     | '/books/$bookId'
-    | '/client/clientId'
+    | '/client/$clientId'
+    | '/client/indexclient'
     | '/books/'
   fileRoutesById: FileRoutesById
 }
@@ -179,11 +185,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksIndexRouteImport
       parentRoute: typeof BooksRoute
     }
-    '/client/': {
-      id: '/client/'
-      path: '/'
-      fullPath: '/client/'
-      preLoaderRoute: typeof ClientIndexRouteImport
+    '/client/indexclient': {
+      id: '/client/indexclient'
+      path: '/indexclient'
+      fullPath: '/client/indexclient'
+      preLoaderRoute: typeof ClientIndexclientRouteImport
+      parentRoute: typeof ClientRoute
+    }
+    '/client/$clientId': {
+      id: '/client/$clientId'
+      path: '/$clientId'
+      fullPath: '/client/$clientId'
+      preLoaderRoute: typeof ClientClientIdRouteImport
       parentRoute: typeof ClientRoute
     }
     '/books/$bookId': {
@@ -192,13 +205,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/books/$bookId'
       preLoaderRoute: typeof BooksBookIdRouteImport
       parentRoute: typeof BooksRoute
-    }
-    '/client/$clientId': {
-      id: '/client/$clientId'
-      path: '/$clientId'
-      fullPath: '/client/$clientId'
-      preLoaderRoute: typeof ClientClientIdRouteImport
-      parentRoute: typeof ClientRoute
     }
   }
 }
@@ -212,23 +218,21 @@ const BooksRouteChildren: BooksRouteChildren = {
   BooksBookIdRoute: BooksBookIdRoute,
   BooksIndexRoute: BooksIndexRoute,
 }
-interface ClientRouteChildren {
-  ClientIndexclientRoute: typeof ClientIndexRoute
-  ClientClientIdRoute: typeof ClientClientIdRoute
-}
 
 const BooksRouteWithChildren = BooksRoute._addFileChildren(BooksRouteChildren)
 
 interface ClientRouteChildren {
+  ClientClientIdRoute: typeof ClientClientIdRoute
   ClientIndexclientRoute: typeof ClientIndexclientRoute
 }
 
 const ClientRouteChildren: ClientRouteChildren = {
-  ClientIndexclientRoute,
-  ClientClientIdRoute,
+  ClientClientIdRoute: ClientClientIdRoute,
+  ClientIndexclientRoute: ClientIndexclientRoute,
 }
 
-const ClientRouteWithChildren = ClientRoute._addFileChildren(ClientRouteChildren)
+const ClientRouteWithChildren =
+  ClientRoute._addFileChildren(ClientRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
