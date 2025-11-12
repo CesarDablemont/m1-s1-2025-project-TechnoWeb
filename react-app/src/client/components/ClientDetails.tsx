@@ -1,32 +1,55 @@
-import { Skeleton, Space, Typography } from 'antd'
-import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
+import { Skeleton, Space, Typography, Avatar } from 'antd'
+import { useClientDetailsProvider } from '../providers/useClientDetailsProvider'
 import { useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Route as booksRoute } from '../../routes/books'
+import { Route as clientsRoute } from '../../routes/client'
 
-interface BookDetailsProps {
+interface ClientDetailsProps {
   id: string
 }
 
-export const BookDetails = ({ id }: BookDetailsProps) => {
-  const { isLoading, book, loadBook } = useBookDetailsProvider(id)
+export const ClientDetails = ({ id }: ClientDetailsProps) => {
+  const { isLoading, client, loadClient } = useClientDetailsProvider(id)
 
   useEffect(() => {
-    loadBook()
+    loadClient()
   }, [id])
 
   if (isLoading) {
     return <Skeleton active />
   }
 
+  if (!client) {
+    return <Typography.Text>Aucun client trouvé.</Typography.Text>
+  }
+
   return (
-    <Space direction="vertical" style={{ textAlign: 'left', width: '95%' }}>
-      <Link to={booksRoute.to}>
-        <ArrowLeftOutlined />
+    <Space
+      direction="vertical"
+      style={{
+        textAlign: 'left',
+        width: '95%',
+        alignItems: 'flex-start',
+      }}
+    >
+      <Link to={clientsRoute.to}>
+        <ArrowLeftOutlined /> Retour à la liste
       </Link>
-      <Typography.Title level={1}>{book?.title}</Typography.Title>
-      <Typography.Title level={3}>{book?.yearPublished}</Typography.Title>
+
+      <Space align="center" size="large">
+        <Avatar
+          size={100}
+          src={client.photoUrl}
+          alt={`${client.firstName} ${client.lastName}`}
+        />
+        <div>
+          <Typography.Title level={2}>
+            {client.firstName} {client.lastName}
+          </Typography.Title>
+          <Typography.Text type="secondary">{client.email}</Typography.Text>
+        </div>
+      </Space>
     </Space>
   )
 }
