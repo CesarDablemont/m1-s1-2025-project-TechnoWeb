@@ -1,31 +1,36 @@
 import { useState } from 'react'
-import type { BookModel, UpdateBookModel } from '../BookModel'
-import { Button, Col, Row } from 'antd'
+import type { ClientModel, UpdateClientModel } from '../ClientModel'
+import { Button, Col, Row, Input, Avatar } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
 } from '@ant-design/icons'
-import { Link } from '@tanstack/react-router'
 
-interface BookListItemProps {
-  book: BookModel
+interface ClientListItemProps {
+  client: ClientModel
   onDelete: (id: string) => void
-  onUpdate: (id: string, input: UpdateBookModel) => void
+  onUpdate: (id: string, input: UpdateClientModel) => void
 }
 
-export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
-  const [title, setTitle] = useState(book.title)
+export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemProps) {
   const [isEditing, setIsEditing] = useState(false)
+  const [firstName, setFirstName] = useState(client.firstName)
+  const [lastName, setLastName] = useState(client.lastName)
+  const [email, setEmail] = useState(client.email)
+  const [photoUrl, setPhotoUrl] = useState(client.photoUrl)
 
   const onCancelEdit = () => {
     setIsEditing(false)
-    setTitle(book.title)
+    setFirstName(client.firstName)
+    setLastName(client.lastName)
+    setEmail(client.email)
+    setPhotoUrl(client.photoUrl)
   }
 
   const onValidateEdit = () => {
-    onUpdate(book.id, { title })
+    onUpdate(client.id, { firstName, lastName, email, photoUrl })
     setIsEditing(false)
   }
 
@@ -33,43 +38,61 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
     <Row
       style={{
         width: '100%',
-        height: '50px',
+        minHeight: '80px',
         borderRadius: '10px',
-        backgroundColor: '#EEEEEE',
-        margin: '1rem 0',
-        padding: '.25rem',
-        display: 'flex',
-        justifyContent: 'space-between',
+        backgroundColor: '#F8F9FA',
+        margin: '0.5rem 0',
+        padding: '.75rem',
+        alignItems: 'center',
       }}
     >
-      <Col span={12} style={{ margin: 'auto 0' }}>
+      {/* Avatar du client */}
+      <Col span={3} style={{ display: 'flex', justifyContent: 'center' }}>
+        <Avatar src={client.photoUrl} alt={`${client.firstName} ${client.lastName}`} />
+      </Col>
+
+      {/* Informations principales */}
+      <Col span={15}>
         {isEditing ? (
-          <input value={title} onChange={e => setTitle(e.target.value)} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <Input
+              value={firstName}
+              placeholder="Prénom"
+              onChange={e => setFirstName(e.target.value)}
+            />
+            <Input
+              value={lastName}
+              placeholder="Nom"
+              onChange={e => setLastName(e.target.value)}
+            />
+            <Input
+              value={email}
+              placeholder="Email"
+              onChange={e => setEmail(e.target.value)}
+            />
+            <Input
+              value={photoUrl}
+              placeholder="Photo URL"
+              onChange={e => setPhotoUrl(e.target.value)}
+            />
+          </div>
         ) : (
-          <Link
-            to={`/books/$bookId`}
-            params={{ bookId: book.id }}
-            style={{
-              margin: 'auto 0',
-              textAlign: 'left',
-            }}
-          >
-            <span style={{ fontWeight: 'bold' }}>{book.title}</span> -{' '}
-            {book.yearPublished}
-          </Link>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>
+              {client.firstName} {client.lastName}
+            </span>
+            <span style={{ color: '#555' }}>{client.email}</span>
+          </div>
         )}
       </Col>
-      <Col span={9} style={{ margin: 'auto 0' }}>
-        by <span style={{ fontWeight: 'bold' }}>{book.author.firstName}</span>{' '}
-        <span style={{ fontWeight: 'bold' }}>{book.author.lastName}</span>
-      </Col>
+
+      {/* Actions */}
       <Col
-        span={3}
+        span={6}
         style={{
-          alignItems: 'right',
           display: 'flex',
-          gap: '.25rem',
-          margin: 'auto 0',
+          justifyContent: 'flex-end',
+          gap: '.5rem',
         }}
       >
         {isEditing ? (
@@ -82,11 +105,11 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
             </Button>
           </>
         ) : (
-          <Button type="primary" onClick={() => setIsEditing(true)}>
+          <Button type="default" onClick={() => setIsEditing(true)}>
             <EditOutlined />
           </Button>
         )}
-        <Button type="primary" danger onClick={() => onDelete(book.id)}>
+        <Button type="primary" danger onClick={() => onDelete(client.id)}>
           <DeleteOutlined />
         </Button>
       </Col>

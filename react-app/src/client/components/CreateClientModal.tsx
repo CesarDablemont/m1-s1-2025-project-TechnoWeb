@@ -1,31 +1,26 @@
-import { useEffect, useState } from 'react'
-import type { CreateBookModel } from '../BookModel'
-import { Button, Input, Modal, Select, Space } from 'antd'
+import { useState } from 'react'
+import type { CreateClientModel } from '../ClientModel'
+import { Button, Input, Modal, Space } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { useBookAuthorsProviders } from '../providers/useBookAuthorsProviders'
 
-interface CreateBookModalProps {
-  onCreate: (book: CreateBookModel) => void
+interface CreateClientModalProps {
+  onCreate: (client: CreateClientModel) => void
 }
 
-export function CreateBookModal({ onCreate }: CreateBookModalProps) {
+export function CreateClientModal({ onCreate }: CreateClientModalProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [title, setTitle] = useState('')
-  const [yearPublished, setYearPublished] = useState(0)
-  const [authorId, setAuthorId] = useState<string | undefined>(undefined)
-  const { authors, loadAuthors } = useBookAuthorsProviders()
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [photoUrl, setPhotoUrl] = useState('')
 
   const onClose = () => {
-    setTitle('')
-    setYearPublished(0)
+    setFirstName('')
+    setLastName('')
+    setEmail('')
+    setPhotoUrl('')
     setIsOpen(false)
   }
-
-  useEffect(() => {
-    if (isOpen) {
-      loadAuthors()
-    }
-  }, [isOpen])
 
   return (
     <>
@@ -34,43 +29,51 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
         type="primary"
         onClick={() => setIsOpen(true)}
       >
-        Create Book
+        Créer un client
       </Button>
+
       <Modal
         open={isOpen}
+        title="Créer un nouveau client"
         onCancel={onClose}
         onOk={() => {
           onCreate({
-            title,
-            yearPublished,
-            authorId: '4540d533-3100-445a-8796-ab5dfd9a3240',
+            id: crypto.randomUUID(), // génère un id unique côté front
+            firstName,
+            lastName,
+            email,
+            photoUrl,
           })
           onClose()
         }}
         okButtonProps={{
-          disabled: !authorId || !title?.length || !yearPublished,
+          disabled: !firstName || !lastName || !email,
         }}
       >
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input
             type="text"
-            placeholder="Title"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-          />
-          <Select
-            style={{ width: '100%' }}
-            options={authors.map(author => ({
-              label: `${author.firstName} ${author.lastName}`,
-              value: author.id,
-            }))}
-            onChange={value => setAuthorId(value)}
+            placeholder="Prénom"
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
           />
           <Input
-            type="number"
-            placeholder="Year Published"
-            value={yearPublished}
-            onChange={e => setYearPublished(Number(e.target.value))}
+            type="text"
+            placeholder="Nom"
+            value={lastName}
+            onChange={e => setLastName(e.target.value)}
+          />
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="URL de la photo"
+            value={photoUrl}
+            onChange={e => setPhotoUrl(e.target.value)}
           />
         </Space>
       </Modal>

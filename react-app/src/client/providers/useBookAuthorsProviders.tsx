@@ -1,18 +1,20 @@
 import { useState } from 'react'
-import type { BookModel } from '../BookModel'
+import type { ClientModel } from '../ClientModel'
 import axios from 'axios'
 
-export const useBookAuthorsProviders = () => {
-  const [authors, setAuthors] = useState<BookModel['author'][]>([])
+export const useClientContactsProvider = () => {
+  const [contacts, setContacts] = useState<ClientModel[]>([])
 
-  const loadAuthors = () => {
+  const loadContacts = () => {
     axios
-      .get('http://localhost:3000/authors')
-      .then(data => {
-        setAuthors(data.data)
+      .get('http://localhost:5713/contacts')
+      .then(response => {
+        setContacts(response.data)
       })
-      .catch(err => console.error(err))
+      .catch(error => {
+        console.error('Erreur lors du chargement des contacts :', error)
+      })
   }
 
-  return { authors, loadAuthors }
+  return { contacts, loadContacts }
 }

@@ -1,18 +1,17 @@
-export type BookModel = {
+export type ClientModel = {
   id: string
-  title: string
-  yearPublished: number
-  author: {
-    id: string
-    firstName: string
-    lastName: string
-  }
+  firstName: string
+  lastName: string
+  email: string
+  photoUrl: string
 }
 
-export type CreateBookModel = {
-  authorId: string
-  title: string
-  yearPublished: number
+export type CreateClientModel = {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  photoUrl: string
 }
 
-export type UpdateBookModel = Partial<CreateBookModel>
+export type UpdateClientModel = Partial<CreateClientModel>
