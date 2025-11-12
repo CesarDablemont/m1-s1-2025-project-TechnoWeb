@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { ClientDetails } from '../client/components/ClientDetails'
 
 export const Route = createFileRoute('/client/$clientId')({
   component: ClientDetailsPage,
