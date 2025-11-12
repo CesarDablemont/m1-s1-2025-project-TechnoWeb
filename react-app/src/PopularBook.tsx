@@ -24,13 +24,13 @@ export function PopularBook({ books }: PopularBookProps) {
       {/* Titre */}
       <div style={{
         padding: '10px 40px',
-        backgroundColor: '#395E66',
+        backgroundColor: '#ffffffff',
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
       }}>
         <h2 style={{
-          color: 'white',
+          color: 'black',
           margin: '0',
           fontSize: '25px',
           fontWeight: 700,
@@ -45,7 +45,7 @@ export function PopularBook({ books }: PopularBookProps) {
         display: 'flex',
         gap: '15px',
         padding: '5px 20px 20px 20px',
-        backgroundColor: '#395E66',
+        backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '80px',
@@ -59,7 +59,7 @@ export function PopularBook({ books }: PopularBookProps) {
             key={book.id}
             style={{
               padding: '20px 35px',
-              backgroundColor: '#2a4450',
+              backgroundColor: '#2b2a2aff',
               color: 'white',
               border: 'none',
               borderRadius: '10px',
@@ -68,7 +68,7 @@ export function PopularBook({ books }: PopularBookProps) {
               fontSize: '20px',
               fontWeight: 'bold',
               flex: '1 1 calc(33.333% - 10px)',
-              height: '100px',
+              height: '200px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -76,11 +76,11 @@ export function PopularBook({ books }: PopularBookProps) {
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#1a2c34'
+              e.currentTarget.style.backgroundColor = '#222121ff'
               e.currentTarget.style.transform = 'scale(1.05)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#2a4450'
+              e.currentTarget.style.backgroundColor = '#2b2a2aff'
               e.currentTarget.style.transform = 'scale(1)'
             }}
           >
