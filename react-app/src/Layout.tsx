@@ -6,12 +6,14 @@ import { Route as clientRoute } from './routes/client'
 import { Space, type MenuProps } from 'antd'
 import { BookOutlined, HomeOutlined, InfoOutlined } from '@ant-design/icons'
 import Menu from 'antd/es/menu/menu'
+import { BottomPage } from './BottomPage'
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
 export function Layout({ children }: LayoutProps) {
+  
 
   const items: Required<MenuProps>['items'] = [
     {
@@ -61,6 +63,7 @@ export function Layout({ children }: LayoutProps) {
         <Menu mode="horizontal" items={items} />
       </div>
       <div style={{ width: '100%', overflowY: 'scroll' }}>{children}</div>
+      <BottomPage />
     </Space>
   )
 }
