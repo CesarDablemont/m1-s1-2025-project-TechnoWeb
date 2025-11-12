@@ -7,7 +7,7 @@ function App() {
   const [name, setName] = useState<string>('')
   const [newName, setNewName] = useState<string>('')
 
-  // Livres populaires
+  // Livres populaires en exmple a remplacer par les données dans la DB
   const popularBooks = [
     { id: 1, title: '1984' },
     { id: 2, title: 'Le Seigneur des Anneaux' },
@@ -23,6 +23,7 @@ function App() {
 
   return (
     <>
+      
       <PopularBook books={popularBooks} />
 
       <Hello name={name}>How are you man ?</Hello>
