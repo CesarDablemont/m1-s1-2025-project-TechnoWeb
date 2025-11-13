@@ -2,8 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { AuthorEntity } from "../authors/author.entity";
+import { SaleEntity } from "../sales/sales.entity";
 import {
   BookModel,
+  BookModelWithSalesCount,
   CreateBookModel,
   FilterBooksModel,
   UpdateBookModel,
@@ -15,6 +17,8 @@ export class BookRepository {
   constructor(
     @InjectRepository(AuthorEntity)
     private readonly authorRepository: Repository<AuthorEntity>,
+    @InjectRepository(SaleEntity)
+    private readonly saleRepository: Repository<SaleEntity>,
     @InjectRepository(BookEntity)
     private readonly bookRepository: Repository<BookEntity>,
     private readonly dataSource: DataSource,
@@ -33,7 +37,9 @@ export class BookRepository {
     return [books, totalCount];
   }
 
-  public async getBookById(id: string): Promise<BookModel | undefined> {
+  public async getBookById(
+    id: string,
+  ): Promise<BookModelWithSalesCount | undefined> {
     const book = await this.bookRepository.findOne({
       where: { id: id as BookId },
     });
@@ -50,9 +56,14 @@ export class BookRepository {
       return undefined;
     }
 
+    const salesCount = await this.saleRepository.count({
+      where: { bookId: book.id },
+    });
+
     return {
       ...book,
       author,
+      salesCount,
     };
   }
 

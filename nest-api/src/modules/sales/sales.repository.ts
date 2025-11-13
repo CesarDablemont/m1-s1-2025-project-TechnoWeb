@@ -1,14 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
-import { SaleEntity } from './sales.entity';
-import { ClientEntity } from '../clients/entities/client.entity';
-import { 
-  SaleModel, 
-  FilterSalesModel,
-  CreateSaleModel } from './sales.model';
-import { ClientId } from '../clients/entities/client.entity';
-import { NotFoundError } from 'rxjs';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { DataSource, Repository } from "typeorm";
+import { SaleEntity } from "./sales.entity";
+import { ClientEntity, ClientId } from "../clients/entities/client.entity";
+import { SaleModel, FilterSalesModel, CreateSaleModel } from "./sales.model";
+import { NotFoundError } from "rxjs";
+import { BookEntity, BookId } from "../books/entities/book.entity";
 
 @Injectable()
 export class SaleRepository {
@@ -16,8 +13,10 @@ export class SaleRepository {
     @InjectRepository(SaleEntity)
     private readonly salesRepository: Repository<SaleEntity>,
     @InjectRepository(ClientEntity)
-    private readonly clientsRepository: Repository<ClientEntity>,
+    private readonly clientRepository: Repository<ClientEntity>,
     private readonly dataSource: DataSource,
+    @InjectRepository(BookEntity)
+    private readonly bookRepository: Repository<BookEntity>,
   ) {}
 
   public async getAllSales(
@@ -34,7 +33,7 @@ export class SaleRepository {
   public async getSalesByClientId(
     clientId: string,
   ): Promise<[SaleModel[], number]> {
-    const client = await this.clientsRepository.findOne({
+    const client = await this.clientRepository.findOne({
       where: { id: clientId as ClientId },
     });
     if (!client) {
@@ -50,7 +49,7 @@ export class SaleRepository {
   }
 
   public async countSalesByClientId(clientId: string): Promise<number> {
-    const client = await this.clientsRepository.findOne({
+    const client = await this.clientRepository.findOne({
       where: { id: clientId as ClientId },
     });
     if (!client) {
@@ -61,27 +60,40 @@ export class SaleRepository {
     });
   }
 
+  public async countSalesByBookId(bookId: string): Promise<number> {
+    const book = await this.bookRepository.findOne({
+      where: { id: bookId as BookId },
+    });
+    if (!book) {
+      throw new NotFoundException(`Client with ID "${bookId}" not found`);
+    }
+    return this.salesRepository.count({
+      where: { bookId: bookId as BookId },
+    });
+  }
+
   public async createSale(sale: CreateSaleModel): Promise<SaleModel> {
-  const client = await this.clientsRepository.findOne({
-    where: { id: sale.clientId as ClientId },
-  });
-  if (!client) {
-    throw new NotFoundException(`Client with ID "${sale.clientId}" not found`);
+    const client = await this.clientRepository.findOne({
+      where: { id: sale.clientId as ClientId },
+    });
+    if (!client) {
+      throw new NotFoundException(
+        `Client with ID "${sale.clientId}" not found`,
+      );
+    }
+
+    const book = await this.dataSource.getRepository("BookEntity").findOne({
+      where: { id: sale.bookId },
+    });
+    if (!book) {
+      throw new NotFoundException(`Book with ID "${sale.bookId}" not found`);
+    }
+
+    const newSale = this.salesRepository.create({
+      ...sale,
+      saleDate: new Date(),
+    });
+
+    return this.salesRepository.save(newSale);
   }
-
-  const book = await this.dataSource.getRepository('BookEntity').findOne({
-    where: { id: sale.bookId },
-  });
-  if (!book) {
-    throw new NotFoundException(`Book with ID "${sale.bookId}" not found`);
-  }
-
-  const newSale = this.salesRepository.create({
-    ...sale,
-    saleDate: new Date(),
-  });
-
-  return this.salesRepository.save(newSale);
-}
-
 }

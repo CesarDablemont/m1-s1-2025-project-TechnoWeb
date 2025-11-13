@@ -13,13 +13,22 @@ export function PopularBook() {
   
   // Récupère 5 livres aléatoires via Get books random
   useEffect(() => {
-    fetch("http://localhost:3000/books/random")
-      .then((res) => res.json())
-      .then((data) => setBooks(data))
+    fetch("http://localhost:3000/books")
+      .then(res => res.json())
+      .then(data => {
+        const allBooks = data.data; // récupère le tableau complet
+        if (allBooks.length === 0) return;
 
-      .catch((err) => console.error("Erreur lors du chargement des livres :", err))
-  }, [])
-  console.log("Réponse API :", books)  
+        // Tirer 5 livres aléatoires
+        const shuffled = allBooks.sort(() => 0.5 - Math.random()); // mélange le tableau
+        const fiveRandomBooks = shuffled.slice(0, 5); // prend les 5 premiers
+
+        setBooks(fiveRandomBooks);
+      })
+      .catch(err => console.error("Erreur :", err));
+  }, []);
+  
+ 
   const [displayedBooks, setDisplayedBooks] = useState<number[]>([1, 2, 3])
   useEffect(() => {
     const interval = setInterval(() => {

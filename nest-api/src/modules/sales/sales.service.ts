@@ -1,10 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { SaleRepository } from './sales.repository';
-import { 
-  SaleModel,
-  FilterSalesModel,
-  CreateSaleModel,
- } from './sales.model';
+import { Injectable } from "@nestjs/common";
+import { SaleRepository } from "./sales.repository";
+import { SaleModel, FilterSalesModel, CreateSaleModel } from "./sales.model";
 
 @Injectable()
 export class SalesService {
@@ -24,6 +20,10 @@ export class SalesService {
 
   public async countSalesByClientId(clientId: string): Promise<number> {
     return this.saleRepository.countSalesByClientId(clientId);
+  }
+
+  public async countSalesByBookId(bookId: string): Promise<number> {
+    return this.saleRepository.countSalesByBookId(bookId);
   }
 
   public async createSale(sale: CreateSaleModel): Promise<SaleModel> {
