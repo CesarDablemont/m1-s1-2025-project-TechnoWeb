@@ -1,13 +1,7 @@
-import { useState } from 'react'
 import type { BookModel, UpdateBookModel } from '../BookModel'
-import { Button, Col, Row } from 'antd'
-import {
-  CheckOutlined,
-  CloseOutlined,
-  DeleteOutlined,
-  EditOutlined,
-} from '@ant-design/icons'
-import { Link } from '@tanstack/react-router'
+import { Col, Row } from 'antd'
+import { useNavigate } from '@tanstack/react-router'
+import { DeleteBookModal } from './DeleteBookModal'
 
 interface BookListItemProps {
   book: BookModel
@@ -15,80 +9,58 @@ interface BookListItemProps {
   onUpdate: (id: string, input: UpdateBookModel) => void
 }
 
-export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
-  const [title, setTitle] = useState(book.title)
-  const [isEditing, setIsEditing] = useState(false)
+export function BookListItem({ book, onDelete }: BookListItemProps) {
+  const navigate = useNavigate()
 
-  const onCancelEdit = () => {
-    setIsEditing(false)
-    setTitle(book.title)
-  }
-
-  const onValidateEdit = () => {
-    onUpdate(book.id, { title })
-    setIsEditing(false)
+  const handleRowClick = () => {
+    navigate({
+      to: '/books/$bookId',
+      params: { bookId: book.id },
+    })
   }
 
   return (
     <Row
+      onClick={handleRowClick}
       style={{
-        width: '100%',
-        height: '50px',
+        minHeight: '80px',
         borderRadius: '10px',
-        backgroundColor: '#EEEEEE',
-        margin: '1rem 0',
-        padding: '.25rem',
-        display: 'flex',
-        justifyContent: 'space-between',
+        backgroundColor: '#393E46',
+        margin: '0.5rem 0.5rem',
+        padding: '.75rem',
+        alignItems: 'center',
+        cursor: 'pointer',
+        transition: 'background-color 0.2s ease',
       }}
     >
-      <Col span={12} style={{ margin: 'auto 0' }}>
-        {isEditing ? (
-          <input value={title} onChange={e => setTitle(e.target.value)} />
-        ) : (
-          <Link
-            to={`/books/$bookId`}
-            params={{ bookId: book.id }}
-            style={{
-              margin: 'auto 0',
-              textAlign: 'left',
-            }}
-          >
-            <span style={{ fontWeight: 'bold' }}>{book.title}</span> -{' '}
-            {book.yearPublished}
-          </Link>
-        )}
+      <Col span={15} style={{ paddingLeft: '1rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <span style={{ fontWeight: 'bold', fontSize: '1rem', color: 'white' }}>
+            {book.title}
+          </span>
+          <span style={{ color: '#aaa' }}>({book.yearPublished})</span>
+          <span style={{ color: '#ccc' }}> by {book.author.firstName} {book.author.lastName} </span>
+        </div>
       </Col>
-      <Col span={9} style={{ margin: 'auto 0' }}>
-        by <span style={{ fontWeight: 'bold' }}>{book.author.firstName}</span>{' '}
-        <span style={{ fontWeight: 'bold' }}>{book.author.lastName}</span>
-      </Col>
+
       <Col
-        span={3}
+        span={9}
         style={{
-          alignItems: 'right',
           display: 'flex',
-          gap: '.25rem',
-          margin: 'auto 0',
+          justifyContent: 'flex-end',
+          gap: '.5rem',
+          paddingRight: '1rem',
         }}
+        onClick={(e) => e.stopPropagation()}
       >
-        {isEditing ? (
-          <>
-            <Button type="primary" onClick={onValidateEdit}>
-              <CheckOutlined />
-            </Button>
-            <Button onClick={onCancelEdit}>
-              <CloseOutlined />
-            </Button>
-          </>
-        ) : (
-          <Button type="primary" onClick={() => setIsEditing(true)}>
-            <EditOutlined />
-          </Button>
-        )}
-        <Button type="primary" danger onClick={() => onDelete(book.id)}>
-          <DeleteOutlined />
-        </Button>
+        <DeleteBookModal book={book} onDelete={onDelete} />
       </Col>
     </Row>
   )

@@ -1,22 +1,18 @@
-import { useState } from 'react'
 import './App.css'
-import { Hello } from './Hello'
+import { PopularBook } from './PopularBook'
 
 function App() {
-  const [name, setName] = useState<string>('')
-  const [newName, setNewName] = useState<string>('')
-
-  const onValidate = () => {
-    setName(newName)
-    setNewName('')
-  }
+  const popularBooks = [
+    { id: 1, title: '1984' },
+    { id: 2, title: 'Le Seigneur des Anneaux' },
+    { id: 3, title: 'Fondation' },
+    { id: 4, title: 'Dune' },
+    { id: 5, title: 'Le Hobbit' },
+  ]
 
   return (
     <>
-      <Hello name={name}>How are you man ?</Hello>
-      <input value={newName} onChange={e => setNewName(e.target.value)} />
-      <button onClick={onValidate}>OK</button>
-      <h3>This is a subtitle</h3>
+      <PopularBook books={popularBooks} />
     </>
   )
 }
