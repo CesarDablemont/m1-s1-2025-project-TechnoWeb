@@ -4,6 +4,7 @@ export type ClientModel = {
   lastName: string
   email: string
   photoUrl: string
+  salesCount: number
 }
 
 export type CreateClientModel = {

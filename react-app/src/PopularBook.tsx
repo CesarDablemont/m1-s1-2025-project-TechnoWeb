@@ -7,21 +7,19 @@ interface PopularBookProps {
 export function PopularBook({ books }: PopularBookProps) {
   const [displayedBooks, setDisplayedBooks] = useState([1, 2, 3])
 
-  // Animation de défilement automatique
   useEffect(() => {
     const interval = setInterval(() => {
       setDisplayedBooks((prev) => {
         const newBooks = prev.map((id) => (id === books.length ? 1 : id + 1))
         return newBooks
       })
-    }, 5000) // Change tous les 5 secondes
+    }, 5000)
 
     return () => clearInterval(interval)
   }, [books.length])
 
   return (
     <div style={{ fontFamily: 'Poppins, sans-serif' }}>
-      {/* Titre */}
       <div style={{
         padding: '10px 40px',
         backgroundColor: '#ffffffff',

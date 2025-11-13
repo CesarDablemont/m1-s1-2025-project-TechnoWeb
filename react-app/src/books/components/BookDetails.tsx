@@ -21,7 +21,7 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
   }
 
   return (
-    <Space direction="vertical" style={{ textAlign: 'left', width: '95%' }}>
+    <Space direction="vertical" style={{ textAlign: 'left', width: '95%', backgroundColor: "#393E46" }}>
       <Link to={booksRoute.to}>
         <ArrowLeftOutlined />
       </Link>
