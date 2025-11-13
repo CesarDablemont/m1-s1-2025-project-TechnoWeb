@@ -1,41 +1,28 @@
 import { useState, useEffect } from 'react'
 
+interface PopularAuthorProps {
+  authors: Array<{ id: number; name: string; bio: string }>
+}
 
+export function PopularAuthor({ authors }: PopularAuthorProps) {
+  const [displayedAuthors, setDisplayedAuthors] = useState([1, 2, 3])
 
-export function PopularBook() {
-  
-  const [books, setBooks] = useState<Array<{
-  id: string
-  title: string
-  yearPublished: number
-  authorId: string
-}>>([])
-  
-  // Récupère 5 livres aléatoires via Get books random
-  useEffect(() => {
-    fetch("http://localhost:3000/books/random")
-      .then((res) => res.json())
-      .then((data) => setBooks(data))
-
-      .catch((err) => console.error("Erreur lors du chargement des livres :", err))
-  }, [])
-  console.log("Réponse API :", books)  
-  const [displayedBooks, setDisplayedBooks] = useState<number[]>([1, 2, 3])
   useEffect(() => {
     const interval = setInterval(() => {
-      setDisplayedBooks((prev) => {
-        const newBooks = prev.map((id) => (id === books.length ? 1 : id + 1))
-        return newBooks
+      setDisplayedAuthors((prev) => {
+        const newAuthors = prev.map((id) => (id === authors.length ? 1 : id + 1))
+        return newAuthors
       })
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [books.length])
+  }, [authors.length])
 
   return (
     <div style={{ fontFamily: 'Poppins, sans-serif' }}>
+      {/* En-tête */}
       <div style={{
-        padding: '30px 40px',
+        padding: '10px 40px',
         backgroundColor: '#222831',
         display: 'flex',
         justifyContent: 'flex-start',
@@ -48,11 +35,11 @@ export function PopularBook() {
           fontWeight: 700,
           lineHeight: 1,
         }}>
-          📚 Popular Books
+          ✍️ Popular Authors
         </h2>
       </div>
 
-      {/* Barre avec les livres */}
+      {/* Barre avec les auteurs */}
       <div style={{
         display: 'flex',
         gap: '10px',
@@ -61,13 +48,13 @@ export function PopularBook() {
         alignItems: 'center',
         minHeight: '80px',
         width: '100%',
-        flexWrap: 'wrap',
+        flexWrap: 'nowrap',
       }}>
-      {books
-          .filter((book, index) => displayedBooks.includes(index)) // attention : displayedBooks contient maintenant des indices
-          .map((book) => (
+        {authors
+          .filter((author) => displayedAuthors.includes(author.id))
+          .map((author) => (
             <button
-              key={book.id}
+              key={author.id}
               style={{
                 padding: '15px 15px',
                 boxSizing: 'border-box',
@@ -83,8 +70,9 @@ export function PopularBook() {
                 height: '200px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                
                 transition: 'all 0.5s ease',
+                minWidth: '0',
                 transform: 'scale(0.95)',
               }}
               onMouseEnter={(e) => {
@@ -96,13 +84,20 @@ export function PopularBook() {
                 e.currentTarget.style.transform = 'scale(0.95)'
               }}
             >
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <span>Titre : {book.title}</span>
-                <span>Année : {book.yearPublished}</span>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                width: '100%',            // occupe toute la largeur du bouton
+                whiteSpace: 'normal',     // autorise le retour à la ligne
+                overflowWrap: 'break-word' // coupe les mots longs si nécessaire
+              }}>
+                <span>Nom : {author.name}</span>      
+                <span>Bio : {author.bio}</span>
               </div>
+
             </button>
-          ))
-        }
+          ))}
       </div>
     </div>
   )
