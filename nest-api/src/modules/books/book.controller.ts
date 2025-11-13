@@ -9,7 +9,7 @@ import {
   Query,
 } from "@nestjs/common";
 import { CreateBookDto, GetBooksDto, UpdateBookDto } from "./book.dto";
-import { GetBooksModel } from "./book.model";
+import { BookModel, GetBooksModel } from "./book.model";
 import { BookService } from "./book.service";
 
 @Controller("books")
@@ -54,4 +54,10 @@ export class BookController {
   deleteBook(@Param("id") id: string) {
     return this.bookService.deleteBook(id);
   }
+  @Get("random")
+async getRandomBook() {
+  return this.bookService.getRandomBook();
 }
+
+}
+
