@@ -5,6 +5,9 @@ import { Skeleton, Space, Typography, Avatar, Row, Col, Input, Button, Divider }
 import { Link } from '@tanstack/react-router'
 import { Route as clientsRoute } from '../../routes/clients'
 import type { UpdateClientModel } from '../ClientModel'
+import { useBookProvider } from '../../books/providers/useBookProvider'
+import { useSaleProvider } from '../../sales/providers/useSaleProvider'
+import { BookListItem } from '../../books/components/BookListItem'
 
 interface ClientDetailsProps {
   id: string
@@ -12,7 +15,10 @@ interface ClientDetailsProps {
 }
 
 export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
+  // --- Hooks au tout début ---
   const { isLoading, client, loadClient } = useClientDetailsProvider(id)
+  const { loadBooks } = useBookProvider()
+  const { sales, loadSalesWithClientId } = useSaleProvider()
 
   const [isEditing, setIsEditing] = useState(false)
   const [firstName, setFirstName] = useState('')
@@ -20,8 +26,14 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
   const [email, setEmail] = useState('')
   const [photoUrl, setPhotoUrl] = useState('')
 
+  // --- Effets ---
+  useEffect(() => {
+    loadBooks()
+  }, [])
+
   useEffect(() => {
     loadClient()
+    loadSalesWithClientId(id)
   }, [id])
 
   useEffect(() => {
@@ -33,12 +45,11 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
     }
   }, [client])
 
+  // --- Gestion du chargement et client inexistant ---
   if (isLoading) return <Skeleton active />
+  if (!client) return <Typography.Text style={{ color: 'white' }}>Aucun client trouvé.</Typography.Text>
 
-  if (!client) {
-    return <Typography.Text style={{ color: 'white' }}>Aucun client trouvé.</Typography.Text>
-  }
-
+  // --- Gestion de l'édition ---
   const onCancel = () => {
     setIsEditing(false)
     if (client) {
@@ -49,12 +60,13 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
     }
   }
 
-  const onSave = async () => {
+  const onSave = () => {
     if (!firstName || !lastName) return
     onUpdate(client.id, { firstName, lastName, email, photoUrl })
     setIsEditing(false)
   }
 
+  // --- JSX ---
   return (
     <Space
       direction="vertical"
@@ -93,58 +105,31 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
           {isEditing ? (
             <>
               <Space direction="horizontal" style={{ color: 'white' }}>
-                <Typography.Text style={{ color: 'white', width: 90 }}>Lastname :</Typography.Text>
-                <Input
-                  value={lastName}
-                  onChange={e => setLastName(e.target.value)}
-                  style={{ width: 150 }}
-                />
+                <Typography.Text style={{ width: 90 }}>Lastname :</Typography.Text>
+                <Input value={lastName} onChange={e => setLastName(e.target.value)} style={{ width: 150 }} />
               </Space>
 
-              <Space direction="horizontal" style={{ color: 'white' }}>
-                <Typography.Text style={{ color: 'white', width: 90 }}>Firstname :</Typography.Text>
-                <Input
-                  value={firstName}
-                  onChange={e => setFirstName(e.target.value)}
-                  style={{ width: 150 }}
-                />
+              <Space direction="horizontal">
+                <Typography.Text style={{ width: 90 }}>Firstname :</Typography.Text>
+                <Input value={firstName} onChange={e => setFirstName(e.target.value)} style={{ width: 150 }} />
               </Space>
 
-              <Space direction="horizontal" style={{ color: 'white' }}>
-                <Typography.Text style={{ color: 'white', width: 90 }}>Email :</Typography.Text>
-                <Input
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  style={{ width: 200 }}
-                />
+              <Space direction="horizontal">
+                <Typography.Text style={{ width: 90 }}>Email :</Typography.Text>
+                <Input value={email} onChange={e => setEmail(e.target.value)} style={{ width: 200 }} />
               </Space>
 
-              <Space direction="horizontal" style={{ color: 'white' }}>
-                <Typography.Text style={{ color: 'white', width: 90 }}>Photo URL :</Typography.Text>
-                <Input
-                  value={photoUrl}
-                  onChange={e => setPhotoUrl(e.target.value)}
-                  style={{ width: 250 }}
-                />
+              <Space direction="horizontal">
+                <Typography.Text style={{ width: 90 }}>Photo URL :</Typography.Text>
+                <Input value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} style={{ width: 250 }} />
               </Space>
             </>
           ) : (
             <>
-              <Typography.Text style={{ color: 'white' }}>
-                <strong>Lastname :</strong> {lastName}
-              </Typography.Text>
-
-              <Typography.Text style={{ color: 'white' }}>
-                <strong>- Firstname :</strong> {firstName}
-              </Typography.Text>
-
-              <Typography.Text style={{ color: 'white' }}>
-                <strong>- Email :</strong> {email || '-'}
-              </Typography.Text>
-
-              <Typography.Text style={{ color: 'white' }}>
-                <strong>- Books purchased :</strong> {client.salesCount || 0}
-              </Typography.Text>
+              <Typography.Text style={{ color: "white" }}><strong>Lastname :</strong> {lastName}</Typography.Text>
+              <Typography.Text style={{ color: "white" }}><strong>Firstname :</strong> {firstName}</Typography.Text>
+              <Typography.Text style={{ color: "white" }}><strong>Email :</strong> {email || '-'}</Typography.Text>
+              <Typography.Text style={{ color: "white" }}><strong>Books purchased :</strong> {client.salesCount || 0}</Typography.Text>
             </>
           )}
         </Col>
@@ -156,17 +141,21 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
               <Button icon={<CloseOutlined />} onClick={onCancel} style={{ backgroundColor: '#555', border: 'none', color: 'white' }} />
             </Space>
           ) : (
-            <Button onClick={() => setIsEditing(true)} style={{ backgroundColor: '#393E46', border: '1px solid #948979', color: 'white' }}>
-              Edit
-            </Button>
+            <Button onClick={() => setIsEditing(true)} style={{ backgroundColor: '#393E46', border: '1px solid #948979', color: 'white' }}>Edit</Button>
           )}
         </Col>
       </Row>
 
       <Divider style={{ borderColor: '#393E46' }} />
+      <Typography.Title level={4} style={{ color: 'white' }}>Books purchased</Typography.Title>
+      {sales.map(sale => (
+        <BookListItem
+          key={sale.book.id}
+          book={sale.book}
+          showDelete={false}
+        />
+      ))}
 
-      {/* Liste des livres */}
-      <Typography.Title level={4} style={{ color: 'white' }}>Books owned</Typography.Title>
     </Space>
   )
 }

@@ -1,5 +1,5 @@
 import type { AuthorModel, UpdateAuthorModel } from '../AuthorModel'
-import { Col, Row, Avatar } from 'antd'
+import { Col, Row } from 'antd'
 import { useNavigate } from '@tanstack/react-router'
 import { DeleteAuthorModal } from './DeleteAuthorModal'
 
@@ -14,10 +14,11 @@ export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
 
   const handleRowClick = () => {
     navigate({
-      to: '/authors/$authorId',
-      params: { authorId: author.id },
+      to: '/authors/$authorId', // utiliser la route importée
+      params: { authorId: author.id }, // correspond exactement au param $authorId
     })
   }
+
   return (
     <Row
       onClick={handleRowClick}
@@ -32,11 +33,7 @@ export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
         transition: 'background-color 0.2s ease',
       }}
     >
-      <Col span={3} style={{ display: 'flex', justifyContent: 'center', paddingLeft: '1rem' }}>
-        <Avatar  alt={`${author.firstName} ${author.lastName}`} />
-      </Col>
-
-      <Col span={15}>
+      <Col span={18} style={{ paddingLeft: '1rem' }}>
         <div
           style={{
             display: 'flex',
@@ -48,7 +45,7 @@ export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
           <span style={{ fontWeight: 'bold', fontSize: '1rem', color: 'white' }}>
             {author.firstName} {author.lastName}
           </span>
-          <span style={{ color: '#aaa' }}>Books purchased : {author.salesCount}</span>
+          <span style={{ color: '#aaa' }}>Sales count: {author.salesCount}</span>
         </div>
       </Col>
 
@@ -60,7 +57,7 @@ export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
           gap: '.5rem',
           paddingRight: '1rem',
         }}
-        onClick={(e) => e.stopPropagation()} // empêche le clic sur le modal de déclencher la navigation
+        onClick={(e) => e.stopPropagation()}
       >
         <DeleteAuthorModal author={author} onDelete={onDelete} />
       </Col>

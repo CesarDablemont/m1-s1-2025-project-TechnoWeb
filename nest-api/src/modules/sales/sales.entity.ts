@@ -19,7 +19,7 @@ export class SaleEntity extends BaseEntity {
   @Column({ name: 'client_id', type: 'uuid' })
   clientId: ClientId;
 
-  @ManyToOne(() => ClientEntity)
+  @ManyToOne(() => ClientEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'client_id' })
   client: ClientEntity;
 

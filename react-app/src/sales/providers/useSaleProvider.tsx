@@ -14,6 +14,18 @@ export const useSaleProvider = () => {
       .catch(err => console.error(err))
   }
 
+  const loadSalesWithClientId = (clientId: string) => {
+    axios
+      .get('http://localhost:3000/sales')
+      .then(response => {
+        const allSales: SaleModel[] = response.data.data;
+        const clientSales = allSales.filter(sale => sale.client.id === clientId);
+
+        setSales(clientSales);
+      })
+      .catch(err => console.error(err));
+  }
+
   const createSale = (sale: CreateSaleModel) => {
     axios
       .post('http://localhost:3000/sales', sale)
@@ -32,5 +44,5 @@ export const useSaleProvider = () => {
       .catch(err => console.error(err))
   }
 
-  return { sales, loadSales, createSale, deleteSale }
+  return { sales, loadSales, createSale, deleteSale, loadSalesWithClientId }
 }

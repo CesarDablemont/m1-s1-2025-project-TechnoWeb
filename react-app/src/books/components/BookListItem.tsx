@@ -1,15 +1,16 @@
-import type { BookModel, UpdateBookModel } from '../BookModel'
-import { Col, Row } from 'antd'
-import { useNavigate } from '@tanstack/react-router'
-import { DeleteBookModal } from './DeleteBookModal'
+import { Col, Row } from "antd"
+import { DeleteBookModal } from "./DeleteBookModal"
+import { useNavigate } from "@tanstack/react-router"
+import type { BookModel, UpdateBookModel } from "../BookModel"
 
 interface BookListItemProps {
   book: BookModel
-  onDelete: (id: string) => void
-  onUpdate: (id: string, input: UpdateBookModel) => void
+  onDelete?: (id: string) => void
+  onUpdate?: (id: string, input: UpdateBookModel) => void
+  showDelete?: boolean
 }
 
-export function BookListItem({ book, onDelete }: BookListItemProps) {
+export function BookListItem({ book, onDelete, showDelete = true }: BookListItemProps) {
   const navigate = useNavigate()
 
   const handleRowClick = () => {
@@ -50,18 +51,20 @@ export function BookListItem({ book, onDelete }: BookListItemProps) {
         </div>
       </Col>
 
-      <Col
-        span={9}
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: '.5rem',
-          paddingRight: '1rem',
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <DeleteBookModal book={book} onDelete={onDelete} />
-      </Col>
+      {showDelete && onDelete && (
+        <Col
+          span={9}
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '.5rem',
+            paddingRight: '1rem',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <DeleteBookModal book={book} onDelete={onDelete} />
+        </Col>
+      )}
     </Row>
   )
 }
