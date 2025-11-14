@@ -1,11 +1,10 @@
+import type { AuthorModel } from "../authors/AuthorModel"
+
+
 export type BookModel = {
   id: string
   title: string
-  author: {
-    id: string
-    firstName: string
-    lastName: string
-  }
+  author: AuthorModel
   yearPublished: number
 }
 

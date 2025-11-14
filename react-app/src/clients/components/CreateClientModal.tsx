@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { CreateClientDto } from '../../../../nest-api/src/modules/clients/clients.dto';
-import { Button, Input, Modal, message, Form } from 'antd';
+import { Button, Input, Modal, message, Form, Image } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ClientModel } from '../ClientModel';
 
@@ -14,13 +14,13 @@ export function CreateClientModal({ serverUrl, onCreate }: CreateClientModalProp
   const [formData, setFormData] = useState<CreateClientDto>({
     firstName: '',
     lastName: '',
-    email: undefined,
-    photoUrl: undefined,
+    email: '',
+    photoUrl: '',
   });
   const [loading, setLoading] = useState(false);
 
   const onClose = () => {
-    setFormData({ firstName: '', lastName: '', email: undefined, photoUrl: undefined });
+    setFormData({ firstName: '', lastName: '', email: '', photoUrl: '' });
     setIsOpen(false);
   };
 
@@ -38,10 +38,16 @@ export function CreateClientModal({ serverUrl, onCreate }: CreateClientModalProp
 
     try {
       setLoading(true);
+
+      const payload = {
+        ...formData,
+        photoUrl: formData.photoUrl || "https://media.istockphoto.com/id/2151669184/fr/vectoriel/illustration-vectorielle-plate-en-niveaux-de-gris-avatar-profil-dutilisateur-ic%C3%B4ne-de.jpg?s=612x612&w=0&k=20&c=ZV0ZPkOctwgOPezeC06TP82e4GLg5OiPoptSEHDjSqc=",
+      };
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -167,6 +173,15 @@ export function CreateClientModal({ serverUrl, onCreate }: CreateClientModalProp
               }
             />
           </Form.Item>
+
+          {formData.photoUrl && (
+            <Form.Item label="Photo Preview">
+              <Image
+                width={100}
+                src={formData.photoUrl}
+              />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </>

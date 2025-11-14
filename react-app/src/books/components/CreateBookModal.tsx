@@ -13,7 +13,7 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
   const [title, setTitle] = useState('')
   const [yearPublished, setYearPublished] = useState<number | undefined>(undefined)
   const [authorId, setAuthorId] = useState<string | undefined>(undefined)
-  const { authors, loadAuthors } = useBookAuthorsProviders()
+  const { authors = [], loadAuthors } = useBookAuthorsProviders()
 
   const onClose = () => {
     setTitle('')
@@ -57,7 +57,6 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
         title="Create a new book"
         onCancel={onClose}
         onOk={onSubmit}
-        confirmLoading={false}
         okButtonProps={{
           disabled: okDisabled,
           style: {
@@ -96,9 +95,9 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
               }}
               value={authorId}
               placeholder="Select an author"
-              options={authors.map(a => ({
-                label: `${a.firstName} ${a.lastName}`,
-                value: a.id,
+              options={(Array.isArray(authors) ? authors : []).map(author => ({
+                label: `${author.firstName} ${author.lastName}`,
+                value: author.id,
               }))}
               onChange={value => setAuthorId(value)}
             />
