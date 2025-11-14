@@ -11,6 +11,7 @@ import {
   UpdateBookModel,
 } from "./book.model";
 import { BookEntity, BookId } from "./entities/book.entity";
+import { SaleModel } from "../sales/sales.model";
 
 @Injectable()
 export class BookRepository {
@@ -26,7 +27,7 @@ export class BookRepository {
 
   public async getAllBooks(
     input?: FilterBooksModel,
-  ): Promise<[BookModel[], number]> {
+  ): Promise<[BookModelWithSalesCount[], number]> {
     const [books, totalCount] = await this.bookRepository.findAndCount({
       take: input?.limit,
       skip: input?.offset,
@@ -34,12 +35,25 @@ export class BookRepository {
       order: input?.sort,
     });
 
-    return [books, totalCount];
+    const booksWithSalesCount: BookModelWithSalesCount[] = await Promise.all(
+      books.map(async (book) => {
+        const salesCount = await this.saleRepository.count({
+          where: { bookId: book.id },
+        });
+        return {
+          ...book,
+          salesCount,
+          author: book.author,
+        };
+      }),
+    );
+
+    return [booksWithSalesCount, totalCount];
   }
 
   public async getBookById(
     id: string,
-  ): Promise<BookModelWithSalesCount | undefined> {
+  ): Promise<(BookModel & { sales: SaleModel[] }) | undefined> {
     const book = await this.bookRepository.findOne({
       where: { id: id as BookId },
     });
@@ -56,14 +70,18 @@ export class BookRepository {
       return undefined;
     }
 
-    const salesCount = await this.saleRepository.count({
+    const sales = await this.saleRepository.find({
       where: { bookId: book.id },
     });
+
+    if (!sales) {
+      return undefined;
+    }
 
     return {
       ...book,
       author,
-      salesCount,
+      sales,
     };
   }
 
