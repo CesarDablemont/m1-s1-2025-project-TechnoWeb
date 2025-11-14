@@ -14,8 +14,8 @@ export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
 
   const handleRowClick = () => {
     navigate({
-      to: '/authors/$authorId', // utiliser la route importée
-      params: { authorId: author.id }, // correspond exactement au param $authorId
+      to: '/authors/$authorId',
+      params: { authorId: author.id },
     })
   }
 

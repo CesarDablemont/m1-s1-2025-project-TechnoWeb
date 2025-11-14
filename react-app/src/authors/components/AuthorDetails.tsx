@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { ArrowLeftOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { Skeleton, Space, Typography, Row, Col, Input, Button, Divider } from 'antd'
 import { Link } from '@tanstack/react-router'
-import { Route as authorsRoute } from '../../routes/authors/authors'
+import { Route as authorsRoute } from '../../routes/authors'
 import type { UpdateAuthorModel } from '../AuthorModel'
 
 interface AuthorDetailsProps {
@@ -18,8 +18,6 @@ export const AuthorDetails = ({ id, onUpdate }: AuthorDetailsProps) => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   
-  
-
   useEffect(() => {
     loadAuthor()
   }, [id])
@@ -105,7 +103,6 @@ export const AuthorDetails = ({ id, onUpdate }: AuthorDetailsProps) => {
 
       <Divider style={{ borderColor: '#393E46' }} />
 
-      {/* Liste des livres */}
       <Typography.Title level={4} style={{ color: 'white' }}>Books owned</Typography.Title>
     </Space>
   )
