@@ -40,17 +40,4 @@ export class BookService {
   public async deleteBook(id: string): Promise<void> {
     await this.bookRepository.deleteBook(id);
   }
-
-  public async getRandomBooks(limit = 5): Promise<BookModel[]> {
-  // Récupère tous les livres depuis le repository
-  const [books] = await this.bookRepository.getAllBooks();
-  
-  if (!books || books.length === 0) return [];
-
-  // Mélange le tableau
-  const shuffled = [...books].sort(() => Math.random() - 0.5);
-
-  // Retourne les premiers "limit" livres
-  return shuffled.slice(0, limit);
-}
 }

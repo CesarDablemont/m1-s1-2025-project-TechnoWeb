@@ -54,10 +54,5 @@ export class BookController {
   deleteBook(@Param("id") id: string) {
     return this.bookService.deleteBook(id);
   }
-  @Get("random")
-async getRandomBook() {
-  return this.bookService.getRandomBook();
-}
-
 }
 
