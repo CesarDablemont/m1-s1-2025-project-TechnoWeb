@@ -1,8 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { Route as indexRoute } from './routes/index'
-import { Route as aboutRoute } from './routes/about'
 import { Route as booksRoute } from './routes/books'
-import { Route as clientRoute } from './routes/client'
+import { Route as clientRoute } from './routes/clients'
+import { Route as authorRoute } from './routes/authors/author'
+import { Route as saleRoute } from './routes/sales'
 import { Space, type MenuProps } from 'antd'
 import { BookOutlined, HomeOutlined, InfoOutlined } from '@ant-design/icons'
 import Menu from 'antd/es/menu/menu'
@@ -24,18 +25,18 @@ export function Layout({ children }: LayoutProps) {
       icon: <BookOutlined />,
     },
     {
-      label: <Link to={clientRoute.to}>Client</Link>,
-      key: 'client',
+      label: <Link to={clientRoute.to}>Clients</Link>,
+      key: 'clients',
       icon: <InfoOutlined />,
     },
     {
-      label: <Link to={clientRoute.to}>Author</Link>,
-      key: 'author',
+      label: <Link to={authorRoute.to}>Authors</Link>,
+      key: 'authors',
       icon: <InfoOutlined />,
     },
     {
-      label: <Link to={aboutRoute.to}>About</Link>,
-      key: 'about',
+      label: <Link to={saleRoute.to}>Sales</Link>,
+      key: 'sales',
       icon: <InfoOutlined />,
     },
   ]
@@ -48,17 +49,19 @@ export function Layout({ children }: LayoutProps) {
         height: '100vh',
       }}
     >
-      <div
-        style={{
-          textAlign: 'left',
-          width: '100%',
-          backgroundColor: '#395E66',
-          color: 'white',
-        }}
-      >
-        <h2 style={{ marginTop: '0' }}>Babel&apos;s Library</h2>
-        <Menu mode="horizontal" items={items} />
+      <div>
+        <Menu
+          mode="horizontal"
+          items={items}
+          style={{
+            display: 'flex',
+            justifyContent : 'center',
+            backgroundColor: '#948979',
+            color: '#FFFFFF'
+          }}
+        />
       </div>
+    
       <div style={{ width: '100%', overflowY: 'scroll' }}>{children}</div>
     </Space>
   )

@@ -1,18 +1,19 @@
+import type { AuthorModel } from "../authors/AuthorModel"
+
+
 export type BookModel = {
   id: string
   title: string
+  author: AuthorModel
   yearPublished: number
-  author: {
-    id: string
-    firstName: string
-    lastName: string
-  }
 }
 
 export type CreateBookModel = {
-  authorId: string
   title: string
-  yearPublished: number
+  yearPublished: number,
+  authorId: string
 }
 
 export type UpdateBookModel = Partial<CreateBookModel>
+
+

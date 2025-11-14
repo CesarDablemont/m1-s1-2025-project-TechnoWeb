@@ -2,6 +2,7 @@
   width: 100vw;
   height: 100%;
   text-align: center;
+  background-color: #222831;
 }
 
 :root {
@@ -11,7 +12,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #778da9;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -71,4 +72,40 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.ant-modal .ant-input {
+  background-color: #393E46 !important;
+  color: #ffffff !important;
+  border: 1px solid #222831 !important;
+}
+
+.ant-modal .ant-input::placeholder {
+  color: #bdbdbd !important;
+  opacity: 1 !important;
+}
+
+.ant-modal .ant-form-item-label > label {
+  color: #ffffff !important;
+}
+
+.ant-modal .ant-form-item-explain-error {
+  color: #ff4d4f !important;
+}
+.ant-modal .ant-form-item-explain {
+  color: #aaaaaa !important;
+}
+
+.ant-modal-content {
+  background-color: #222831 !important;
+  color: #ffffff !important;
+}
+
+.ant-modal-title {
+  background-color: #222831 !important;
+  color: #ffffff !important;
+}
+
+.ant-modal-footer {
+   background-color: #222831 !important;
 }
