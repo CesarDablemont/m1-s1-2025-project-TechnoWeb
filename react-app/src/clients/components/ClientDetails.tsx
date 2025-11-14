@@ -71,28 +71,80 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
         to={clientsRoute.to}
         style={{ color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
       >
-        <ArrowLeftOutlined /> Retour à la liste
+        <ArrowLeftOutlined /> Go back
       </Link>
 
       <Row align="middle" style={{ width: '100%' }}>
         <Col flex="none">
-          <Avatar size={80} src={photoUrl} alt={`${firstName} ${lastName}`} />
+          <Avatar size={80} src={photoUrl} />
         </Col>
 
-        <Col flex="auto" style={{ paddingLeft: '1rem', display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+        <Col
+          flex="auto"
+          style={{
+            paddingLeft: '1rem',
+            display: 'flex',
+            gap: '1.5rem',
+            alignItems: 'center',
+            color: "white",
+            flexWrap: "wrap",
+          }}
+        >
           {isEditing ? (
             <>
-              <Input value={firstName} onChange={e => setFirstName(e.target.value)} style={{ width: 120 }} />
-              <Input value={lastName} onChange={e => setLastName(e.target.value)} style={{ width: 120 }} />
-              <Input value={email} onChange={e => setEmail(e.target.value)} style={{ width: 200 }} />
-              <Input value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} style={{ width: 200 }} />
+              <Space direction="horizontal" style={{ color: 'white' }}>
+                <Typography.Text style={{ color: 'white', width: 90 }}>Lastname :</Typography.Text>
+                <Input
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                  style={{ width: 150 }}
+                />
+              </Space>
+
+              <Space direction="horizontal" style={{ color: 'white' }}>
+                <Typography.Text style={{ color: 'white', width: 90 }}>Firstname :</Typography.Text>
+                <Input
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                  style={{ width: 150 }}
+                />
+              </Space>
+
+              <Space direction="horizontal" style={{ color: 'white' }}>
+                <Typography.Text style={{ color: 'white', width: 90 }}>Email :</Typography.Text>
+                <Input
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  style={{ width: 200 }}
+                />
+              </Space>
+
+              <Space direction="horizontal" style={{ color: 'white' }}>
+                <Typography.Text style={{ color: 'white', width: 90 }}>Photo URL :</Typography.Text>
+                <Input
+                  value={photoUrl}
+                  onChange={e => setPhotoUrl(e.target.value)}
+                  style={{ width: 250 }}
+                />
+              </Space>
             </>
           ) : (
             <>
-              <Typography.Text strong>{firstName}</Typography.Text>
-              <Typography.Text strong>{lastName}</Typography.Text>
-              <Typography.Text>{email || '-'}</Typography.Text>
-              <Typography.Text type="secondary">Sales: {client.salesCount || 0}</Typography.Text>
+              <Typography.Text style={{ color: 'white' }}>
+                <strong>Lastname :</strong> {lastName}
+              </Typography.Text>
+
+              <Typography.Text style={{ color: 'white' }}>
+                <strong>- Firstname :</strong> {firstName}
+              </Typography.Text>
+
+              <Typography.Text style={{ color: 'white' }}>
+                <strong>- Email :</strong> {email || '-'}
+              </Typography.Text>
+
+              <Typography.Text style={{ color: 'white' }}>
+                <strong>- Books purchased :</strong> {client.salesCount || 0}
+              </Typography.Text>
             </>
           )}
         </Col>

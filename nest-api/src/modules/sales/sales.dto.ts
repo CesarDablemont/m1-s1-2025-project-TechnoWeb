@@ -11,10 +11,10 @@ import type { ClientId } from "../clients/entities/client.entity";
 
 export class CreateSaleDto {
     @IsUUID(4)
-  @IsString()
-  clientId: ClientId;
+    @IsString()
+    clientId: ClientId;
 
-  @IsString()
+    @IsString()
     bookId: BookId;
 }
 

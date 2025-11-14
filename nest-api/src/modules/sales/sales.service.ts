@@ -29,4 +29,8 @@ export class SalesService {
   public async createSale(sale: CreateSaleModel): Promise<SaleModel> {
     return this.saleRepository.createSale(sale);
   }
+
+  public async deleteSale(id: string): Promise<void> {
+    await this.saleRepository.deleteSale(id);
+  }
 }

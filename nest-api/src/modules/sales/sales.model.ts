@@ -1,10 +1,12 @@
 import { BookModel } from '../books/book.model';
+import { ClientModel } from '../clients/clients.model';
 
 export type SaleModel = {
   id: string;
   bookId : string;
   book: BookModel;
   clientId: string;
+  client: ClientModel
   saleDate: Date;
 };
 

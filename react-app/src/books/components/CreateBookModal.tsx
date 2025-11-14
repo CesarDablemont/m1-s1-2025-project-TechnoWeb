@@ -95,9 +95,9 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
               }}
               value={authorId}
               placeholder="Select an author"
-              options={(Array.isArray(authors) ? authors : []).map(a => ({
-                label: `${a.firstName} ${a.lastName}`,
-                value: a.id,
+              options={(Array.isArray(authors) ? authors : []).map(author => ({
+                label: `${author.firstName} ${author.lastName}`,
+                value: author.id,
               }))}
               onChange={value => setAuthorId(value)}
             />

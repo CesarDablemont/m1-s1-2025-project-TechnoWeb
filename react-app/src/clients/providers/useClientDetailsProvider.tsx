@@ -13,7 +13,5 @@ export const useClientDetailsProvider = (id: string) => {
       .finally(() => setIsLoading(false))
   }
 
-  console.log("salut ")
-
   return { isLoading, client, loadClient }
 }

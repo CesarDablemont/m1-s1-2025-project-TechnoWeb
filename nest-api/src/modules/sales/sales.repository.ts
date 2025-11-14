@@ -8,7 +8,6 @@ import {
   FilterSalesModel,
   CreateSaleModel } from './sales.model';
 import { ClientId } from '../clients/entities/client.entity';
-import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class SaleRepository {
@@ -26,6 +25,7 @@ export class SaleRepository {
     const [sales, totalCount] = await this.salesRepository.findAndCount({
       take: input?.limit,
       skip: input?.offset,
+      relations: { client: true, book: {author:true} },
       order: input?.sort,
     });
     return [sales, totalCount];
@@ -38,7 +38,7 @@ export class SaleRepository {
       where: { id: clientId as ClientId },
     });
     if (!client) {
-      throw new NotFoundError(`Client with ID "${clientId}" not found`);
+      throw new NotFoundException(`Client with ID "${clientId}" not found`);
     }
     const [sales, totalCount] = await this.salesRepository.findAndCount({
       where: { clientId: clientId as ClientId },
@@ -83,5 +83,9 @@ export class SaleRepository {
 
   return this.salesRepository.save(newSale);
 }
+
+ public async deleteSale(id: string): Promise<void> {
+    await this.salesRepository.delete(id);
+  }
 
 }

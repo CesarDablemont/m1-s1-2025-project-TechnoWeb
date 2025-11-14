@@ -1,4 +1,4 @@
-import type { ClientModel, UpdateClientModel } from '../ClientModel'
+import type { ClientModel } from '../ClientModel'
 import { Col, Row, Avatar } from 'antd'
 import { useNavigate } from '@tanstack/react-router'
 import { DeleteClientModal } from './DeleteClientModal'
@@ -6,7 +6,6 @@ import { DeleteClientModal } from './DeleteClientModal'
 interface ClientListItemProps {
   client: ClientModel
   onDelete: (id: string) => void
-  onUpdate: (id: string, input: UpdateClientModel) => void
 }
 
 export function ClientListItem({ client, onDelete }: ClientListItemProps) {
@@ -34,7 +33,7 @@ export function ClientListItem({ client, onDelete }: ClientListItemProps) {
       }}
     >
       <Col span={3} style={{ display: 'flex', justifyContent: 'center', paddingLeft: '1rem' }}>
-        <Avatar src={client.photoUrl} alt={`${client.firstName} ${client.lastName}`} />
+        <Avatar src={client.photoUrl} alt={``} />
       </Col>
 
       <Col span={15}>
