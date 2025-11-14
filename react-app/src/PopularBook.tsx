@@ -11,17 +11,16 @@ export function PopularBook() {
   authorId: string
 }>>([])
   
-  // Récupère 5 livres aléatoires via Get books random
   useEffect(() => {
     fetch("http://localhost:3000/books")
       .then(res => res.json())
       .then(data => {
-        const allBooks = data.data; // récupère le tableau complet
+        const allBooks = data.data; 
         if (allBooks.length === 0) return;
 
-        // Tirer 5 livres aléatoires
-        const shuffled = allBooks.sort(() => 0.5 - Math.random()); // mélange le tableau
-        const fiveRandomBooks = shuffled.slice(0, 5); // prend les 5 premiers
+     
+        const shuffled = allBooks.sort(() => 0.5 - Math.random()); 
+        const fiveRandomBooks = shuffled.slice(0, 5); 
 
         setBooks(fiveRandomBooks);
       })
@@ -42,7 +41,9 @@ export function PopularBook() {
   }, [books.length])
 
   return (
+    
     <div style={{ fontFamily: 'Poppins, sans-serif' }}>
+      {/* Title */}
       <div style={{
         padding: '30px 40px',
         backgroundColor: '#222831',
@@ -57,12 +58,12 @@ export function PopularBook() {
           fontWeight: 700,
           lineHeight: 1,
         }}>
-          📚 Popular Books
+           Popular Books
         </h2>
       </div>
-
-      {/* Barre avec les livres */}
+      {/* Books Bar */}
       <div style={{
+        
         display: 'flex',
         gap: '10px',
         backgroundColor: '#222831',
@@ -73,7 +74,7 @@ export function PopularBook() {
         flexWrap: 'wrap',
       }}>
       {books
-          .filter((book, index) => displayedBooks.includes(index)) // attention : displayedBooks contient maintenant des indices
+          .filter((book, index) => displayedBooks.includes(index)) 
           .map((book) => (
             <button
               key={book.id}
