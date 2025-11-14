@@ -18,7 +18,7 @@ export function CreateSaleModal({ onCreate , defaultBookId}: CreateSaleModalProp
     const { books = [], loadBooks } = useSaleBooksProviders()
 
     const onClose = () => {
-      setBookId(defaultBookId)       // <-- remettre la valeur par défaut
+      setBookId(defaultBookId)
       setClientId(undefined)
       setIsOpen(false)
     }

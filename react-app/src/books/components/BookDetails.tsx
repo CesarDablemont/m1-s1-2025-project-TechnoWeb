@@ -1,7 +1,7 @@
 import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
 import { useEffect, useState } from 'react'
 import { ArrowLeftOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { Skeleton, Space, Typography, Row, Col, Input, Button, Divider } from 'antd'
+import { Skeleton, Space, Typography, Row, Col, Input, Button, Divider, InputNumber, Select } from 'antd'
 import { Link } from '@tanstack/react-router'
 import { Route as booksRoute } from '../../routes/books'
 import type { UpdateBookModel } from '../BookModel'
@@ -9,6 +9,8 @@ import { CreateSaleModal } from '../../sales/components/CreateSaleModal'
 import { useSaleProvider } from '../../sales/providers/useSaleProvider'
 import { useClientProvider } from '../../clients/providers/useClientProvider'
 import { ClientListItem } from '../../clients/components/ClientListItem'
+import { useAuthorProvider } from '../../authors/providers/useAuthorsProvider'
+import type { AuthorModel } from '../../authors/AuthorModel'
 interface BookDetailsProps {
   id: string
   onUpdate: (id: string, input: UpdateBookModel) => void
@@ -18,22 +20,27 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
 
   const { isLoading, book, loadBook } = useBookDetailsProvider(id);
   const { clients, loadClientsWithBookId } = useClientProvider();
+  const { authors, loadAuthors } = useAuthorProvider();
 
   const [isEditing, setIsEditing] = useState(false)
   const [title, setTitle] = useState('')
-  const [author, setAuthors] = useState('')
+  const [selectedAuthor, setSelectedAuthor] = useState<AuthorModel | null>(book?.author ?? null)
+  const [yearPublished, setYearPublished] = useState(0)
+
   const { loadSales, createSale } = useSaleProvider()
 
   useEffect(() => {
     loadBook()
     loadSales()
     loadClientsWithBookId(id)
+    loadAuthors()
   }, [id])
 
   useEffect(() => {
     if (book) {
       setTitle(book.title)
-      setAuthors(book.author.firstName + ' ' + book.author.lastName)
+      setYearPublished(book.yearPublished)
+      setSelectedAuthor(book.author)
     }
   }, [book])
 
@@ -48,15 +55,13 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
     setIsEditing(false)
     if (book) {
       setTitle(book.title)
-      setAuthors(book.author.firstName + ' ' + book.author.lastName)
-
-
+      setSelectedAuthor(book.author)
     }
   }
 
   const onSave = async () => {
-    if (!title) return
-    onUpdate(book.id, { title, authorId: book.author.id })
+    if (!selectedAuthor) return
+    onUpdate(book.id, { title, authorId: selectedAuthor.id, yearPublished })
     setIsEditing(false)
   }
 
@@ -95,7 +100,7 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
           {isEditing ? (
             <>
               <Space direction="horizontal" style={{ color: 'white' }}>
-                <Typography.Text style={{ color: 'white', width: 90 }}>Lastname :</Typography.Text>
+                <Typography.Text style={{ color: 'white', width: 90 }}>Book's title : </Typography.Text>
                 <Input
                   value={title}
                   onChange={e => setTitle(e.target.value)}
@@ -104,29 +109,48 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
               </Space>
 
               <Space direction="horizontal" style={{ color: 'white' }}>
-                <Typography.Text style={{ color: 'white', width: 90 }}>Email :</Typography.Text>
-                <Input
-                  value={author}
-                  onChange={e => setAuthors(e.target.value)}
+                <Typography.Text style={{ color: 'white', width: 90 }}>Book's author : </Typography.Text>
+                <Select
+                value={book.author.id}
+                  style={{ width: 200 }}
+                  options={authors.map(author => ({
+                    label: `${author.firstName} ${author.lastName}`,
+                    value: author.id,
+                  }))}
+                  onChange={id => setSelectedAuthor(authors.find(a => a.id === id) ?? null)}
+                />
+              </Space>
+
+              <Space direction="horizontal" style={{ color: 'white' }}>
+                <Typography.Text style={{ color: 'white', width: 180 }}>
+                  Year of book release:
+                </Typography.Text>
+                <InputNumber
+                  value={yearPublished}
+                  onChange={(value: number | null) => setYearPublished(value ?? 0)}
                   style={{ width: 200 }}
                 />
               </Space>
+
 
             </>
           ) : (
             <>
               <Typography.Text style={{ color: 'white' }}>
-                <strong>Lastname :</strong> {title}
+                <strong>Book's title : </strong> {title}
               </Typography.Text>
 
               <Typography.Text style={{ color: 'white' }}>
-                <strong>- Firstname :</strong> {author}
+                <strong>Book's author : </strong> {selectedAuthor?.firstName} {selectedAuthor?.lastName}
               </Typography.Text>
 
+              <Typography.Text style={{ color: 'white' }}>
+                <strong>Year of book release : </strong> {yearPublished}
+              </Typography.Text>
             </>
           )}
         </Col>
-        <Col flex="none">
+        <Col flex="none" style={{marginRight: '0.75rem'}}>
           <CreateSaleModal
             onCreate={createSale}
             defaultBookId={book.id}
@@ -156,10 +180,11 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
             key={client.id}
             client={client}
             showDelete={false}
+            showBooksPurchased={false}
           />
         ))
       ) : (
-        <li>Aucun client trouvé</li>
+        <li>No clients found</li>
       )}
     </Space>
   )

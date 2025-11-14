@@ -8,14 +8,15 @@ interface ClientListItemProps {
   onDelete?: (id: string) => void
   onUpdate?: (id: string, input: UpdateClientModel) => void
   showDelete?: boolean
+  showBooksPurchased?: boolean
 }
 
 export function ClientListItem({ 
   client, 
   onDelete,
   showDelete = true,
-
- }: ClientListItemProps) {
+  showBooksPurchased = true,
+}: ClientListItemProps) {
   const navigate = useNavigate()
 
   const handleRowClick = () => {
@@ -56,24 +57,26 @@ export function ClientListItem({
             {client.firstName} {client.lastName}
           </span>
           <span style={{ color: '#ccc' }}>{client.email}</span>
-          <span style={{ color: '#aaa' }}>Books purchased : {client.salesCount}</span>
+          {showBooksPurchased && (
+             <span style={{ color: '#aaa' }}>Books purchased: {client.salesCount}</span>
+          )}
         </div>
       </Col>
 
-    {showDelete && onDelete && (
-       <Col
-        span={6}
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: '.5rem',
-          paddingRight: '1rem',
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <DeleteClientModal client={client} onDelete={onDelete} />
-      </Col>
-    )}
+      {showDelete && onDelete && (
+        <Col
+          span={6}
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '.5rem',
+            paddingRight: '1rem',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <DeleteClientModal client={client} onDelete={onDelete} />
+        </Col>
+      )}
     </Row>
   )
 }

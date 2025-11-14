@@ -26,7 +26,6 @@ export function BookListItem({
     })
   }
 
-  // Formatage lisible de la date
   const formattedDate = purchasedDate
     ? new Date(purchasedDate).toLocaleDateString(undefined, {
         year: 'numeric',
