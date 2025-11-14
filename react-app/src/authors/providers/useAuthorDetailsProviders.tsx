@@ -13,7 +13,7 @@ export const useAuthorDetailsProvider = (id: string) => {
       .finally(() => setIsLoading(false))
   }
 
-  console.log("salut ")
+  console.log('Author details loaded:', author)
 
   return { isLoading, author, loadAuthor }
 }

@@ -7,19 +7,20 @@ import { useSaleBooksProviders } from '../providers/useSaleBooksProviders'
 
 interface CreateSaleModalProps {
     onCreate: (Sale: CreateSaleModel) => void
+    defaultBookId?: string
 }
 
-export function CreateSaleModal({ onCreate }: CreateSaleModalProps) {
+export function CreateSaleModal({ onCreate , defaultBookId}: CreateSaleModalProps) {
     const [isOpen, setIsOpen] = useState(false)
-    const [bookId, setBookId] = useState<string | undefined>(undefined)
+    const [bookId, setBookId] = useState<string | undefined>(defaultBookId)
     const [clientId, setClientId] = useState<string | undefined>(undefined)
     const { clients = [], loadClients } = useSaleClientsProviders()
     const { books = [], loadBooks } = useSaleBooksProviders()
 
     const onClose = () => {
-        setBookId(undefined)
-        setClientId(undefined)
-        setIsOpen(false)
+      setBookId(defaultBookId)       // <-- remettre la valeur par défaut
+      setClientId(undefined)
+      setIsOpen(false)
     }
 
     useEffect(() => {
@@ -28,6 +29,12 @@ export function CreateSaleModal({ onCreate }: CreateSaleModalProps) {
             loadBooks()
         }
     }, [isOpen])
+
+     useEffect(() => {
+        if (isOpen && defaultBookId) {
+            setBookId(defaultBookId)
+        }
+    }, [isOpen, defaultBookId])
 
     const onSubmit = () => {
         if (!bookId || !clientId) {

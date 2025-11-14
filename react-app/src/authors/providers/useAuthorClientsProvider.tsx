@@ -7,7 +7,7 @@ export const useAuthorContactsProvider = () => {
 
   const loadContacts = () => {
     axios
-      .get('http://localhost:5713/contacts')
+      .get('http://localhost:3000/contacts')
       .then(response => {
         setContacts(response.data)
       })
