@@ -9,7 +9,7 @@ export const Route = createFileRoute('/clients/$clientId')({
 
 function ClientDetailsPage() {
   const { clientId } = Route.useParams()
-  const {updateClient } = useClientProvider()
+  const { updateClient } = useClientProvider()
 
   return <ClientDetails id={clientId} onUpdate={updateClient} />
 }

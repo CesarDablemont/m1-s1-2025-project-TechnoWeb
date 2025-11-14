@@ -22,7 +22,7 @@ export type UpdateClientModel = Partial<CreateClientModel>;
 export type FilterClientsModel = {
   limit: number;
   offset: number;
-  sort?: Partial<Record<keyof ClientModel, 'ASC' | 'DESC'>>;
+  sort?: Partial<Record<keyof ClientModel, "ASC" | "DESC">>;
 };
 
 export type GetClientsModel = {

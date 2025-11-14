@@ -12,6 +12,10 @@ export type BookModel = {
   yearPublished: number;
 };
 
+export type BookModelWithSalesCount = BookModel & {
+  salesCount: number;
+};
+
 export type CreateBookModel = {
   title: string;
   authorId: AuthorId;

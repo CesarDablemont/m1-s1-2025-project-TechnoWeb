@@ -13,5 +13,5 @@ export const useBookDetailsProvider = (id: string) => {
       .finally(() => setIsLoading(false))
   }
 
-  return { isLoading, book, loadBook }
+  return { isLoading, book, loadBook}
 }

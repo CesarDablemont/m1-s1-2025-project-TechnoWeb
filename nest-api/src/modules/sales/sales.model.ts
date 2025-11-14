@@ -3,7 +3,7 @@ import { ClientModel } from '../clients/clients.model';
 
 export type SaleModel = {
   id: string;
-  bookId : string;
+  bookId: string;
   book: BookModel;
   clientId: string;
   client: ClientModel
@@ -18,7 +18,7 @@ export type CreateSaleModel = {
 export type FilterSalesModel = {
   limit: number;
   offset: number;
-  sort?: Partial<Record<keyof SaleModel, 'ASC' | 'DESC'>>;
+  sort?: Partial<Record<keyof SaleModel, "ASC" | "DESC">>;
 };
 
 export type GetSalesModel = {

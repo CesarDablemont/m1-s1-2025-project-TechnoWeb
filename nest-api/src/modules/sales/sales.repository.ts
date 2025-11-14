@@ -8,9 +8,11 @@ import {
   FilterSalesModel,
   CreateSaleModel } from './sales.model';
 import { ClientId } from '../clients/entities/client.entity';
+import { BookId } from '../books/entities/book.entity';
 
 @Injectable()
 export class SaleRepository {
+  bookRepository: any;
   constructor(
     @InjectRepository(SaleEntity)
     private readonly salesRepository: Repository<SaleEntity>,
@@ -83,6 +85,18 @@ export class SaleRepository {
 
   return this.salesRepository.save(newSale);
 }
+
+ public async countSalesByBookId(bookId: string): Promise<number> {
+    const book = await this.bookRepository.findOne({
+      where: { id: bookId as BookId },
+    });
+    if (!book) {
+      throw new NotFoundException(`Client with ID "${bookId}" not found`);
+    }
+    return this.salesRepository.count({
+      where: { bookId: bookId as BookId },
+    });
+  }
 
  public async deleteSale(id: string): Promise<void> {
     await this.salesRepository.delete(id);
