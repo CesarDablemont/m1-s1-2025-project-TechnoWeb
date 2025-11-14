@@ -8,9 +8,15 @@ interface BookListItemProps {
   onDelete?: (id: string) => void
   onUpdate?: (id: string, input: UpdateBookModel) => void
   showDelete?: boolean
+  purchasedDate?: Date
 }
 
-export function BookListItem({ book, onDelete, showDelete = true }: BookListItemProps) {
+export function BookListItem({
+  book,
+  onDelete,
+  showDelete = true,
+  purchasedDate,
+}: BookListItemProps) {
   const navigate = useNavigate()
 
   const handleRowClick = () => {
@@ -19,6 +25,15 @@ export function BookListItem({ book, onDelete, showDelete = true }: BookListItem
       params: { bookId: book.id },
     })
   }
+
+  // Formatage lisible de la date
+  const formattedDate = purchasedDate
+    ? new Date(purchasedDate).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    : '-'
 
   return (
     <Row
@@ -38,16 +53,24 @@ export function BookListItem({ book, onDelete, showDelete = true }: BookListItem
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            flexWrap: 'wrap',
+            flexDirection: 'column',
+            gap: '0.25rem',
           }}
         >
-          <span style={{ fontWeight: 'bold', fontSize: '1rem', color: 'white' }}>
-            {book.title}
-          </span>
-          <span style={{ color: '#aaa' }}>({book.yearPublished})</span>
-          <span style={{ color: '#ccc' }}> by {book.author.firstName} {book.author.lastName} </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '1rem', color: 'white' }}>
+              {book.title}
+            </span>
+            <span style={{ color: '#aaa' }}>({book.yearPublished})</span>
+            <span style={{ color: '#ccc' }}>
+              by {book.author.firstName} {book.author.lastName}
+            </span>
+          {purchasedDate && (
+            <span style={{ color: '#bbb', fontSize: '1rem' }}>
+              Purchased on: {formattedDate}
+            </span>
+          )}
+          </div>
         </div>
       </Col>
 

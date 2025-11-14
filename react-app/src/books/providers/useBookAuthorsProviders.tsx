@@ -1,23 +1,21 @@
 import { useState } from 'react'
 import axios from 'axios'
+import type { AuthorModel } from '../../authors/AuthorModel' // adapte le chemin
 
 export const useBookAuthorsProviders = () => {
-  const [authors, setAuthors] = useState([])
+  const [authors, setAuthors] = useState<AuthorModel[]>([]) // <-- Typage explicite
 
   const loadAuthors = async () => {
     try {
       const response = await axios.get('http://localhost:3000/authors')
-      console.log('Réponse API auteurs:', response.data)
 
-      // ton API renvoie { data: [...], totalCount: number }
       if (response.data && Array.isArray(response.data.data)) {
-        setAuthors(response.data.data)
+        setAuthors(response.data.data as AuthorModel[]) // <-- assertion de type
       } else {
-        console.warn('Format inattendu:', response.data)
         setAuthors([])
       }
     } catch (err) {
-      console.error('Erreur lors du chargement des auteurs:', err)
+      console.error(err)
       setAuthors([])
     }
   }

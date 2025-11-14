@@ -153,6 +153,7 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
           key={sale.book.id}
           book={sale.book}
           showDelete={false}
+          purchasedDate = {sale.saleDate}
         />
       ))}
 
