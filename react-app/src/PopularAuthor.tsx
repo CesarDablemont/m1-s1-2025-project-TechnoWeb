@@ -7,7 +7,7 @@ export function PopularAuthor() {
     lastName: string;
   }>>([]);
 
-  // Charger les auteurs depuis l'API
+  
   useEffect(() => {
     fetch("http://localhost:3000/authors")
       .then((res) => res.json())
@@ -15,7 +15,7 @@ export function PopularAuthor() {
         const allAuthors = data.data;
         if (!allAuthors || allAuthors.length === 0) return;
 
-        // Mélange et prend 3 auteurs aléatoires
+        
         const shuffled = allAuthors.sort(() => 0.5 - Math.random());
         const threeRandomAuthors = shuffled.slice(0, 3);
 
@@ -47,11 +47,10 @@ export function PopularAuthor() {
             lineHeight: 1,
           }}
         >
-          ✍️ Popular Authors
+          Popular Authors
         </h2>
       </div>
-
-      {/* Liste des auteurs */}
+      {/* Authors Bar */}
       <div
         style={{
           display: "flex",

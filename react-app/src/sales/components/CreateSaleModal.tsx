@@ -31,12 +31,10 @@ export function CreateSaleModal({ onCreate }: CreateSaleModalProps) {
 
     const onSubmit = () => {
         if (!bookId || !clientId) {
-            message.error('Veuillez remplir tous les champs obligatoires.')
             return
         }
 
         onCreate({ bookId, clientId })
-        message.success('Livre créé avec succès !')
         onClose()
     }
 

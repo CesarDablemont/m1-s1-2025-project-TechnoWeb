@@ -83,7 +83,7 @@ export interface FileRoutesByFullPath {
   '/clients': typeof ClientsRouteWithChildren
   '/sale': typeof SaleRoute
   '/sales': typeof SalesRouteWithChildren
-  '/authors/author': typeof AuthorsAuthorRoute
+  '/authors/authors': typeof AuthorsAuthorsRoute
   '/books/$bookId': typeof BooksBookIdRoute
   '/clients/$clientId': typeof ClientsClientIdRoute
   '/books/': typeof BooksIndexRoute
@@ -93,7 +93,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sale': typeof SaleRoute
-  '/authors/author': typeof AuthorsAuthorRoute
+  '/authors/authors': typeof AuthorsAuthorsRoute
   '/books/$bookId': typeof BooksBookIdRoute
   '/clients/$clientId': typeof ClientsClientIdRoute
   '/books': typeof BooksIndexRoute
@@ -107,7 +107,7 @@ export interface FileRoutesById {
   '/clients': typeof ClientsRouteWithChildren
   '/sale': typeof SaleRoute
   '/sales': typeof SalesRouteWithChildren
-  '/authors/author': typeof AuthorsAuthorRoute
+  '/authors/authors': typeof AuthorsAuthorsRoute
   '/books/$bookId': typeof BooksBookIdRoute
   '/clients/$clientId': typeof ClientsClientIdRoute
   '/books/': typeof BooksIndexRoute
@@ -122,7 +122,7 @@ export interface FileRouteTypes {
     | '/clients'
     | '/sale'
     | '/sales'
-    | '/authors/author'
+    | '/authors/authors'
     | '/books/$bookId'
     | '/clients/$clientId'
     | '/books/'
@@ -132,7 +132,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/sale'
-    | '/authors/author'
+    | '/authors/authors'
     | '/books/$bookId'
     | '/clients/$clientId'
     | '/books'
@@ -145,7 +145,7 @@ export interface FileRouteTypes {
     | '/clients'
     | '/sale'
     | '/sales'
-    | '/authors/author'
+    | '/authors/authors'
     | '/books/$bookId'
     | '/clients/$clientId'
     | '/books/'
@@ -159,7 +159,7 @@ export interface RootRouteChildren {
   ClientsRoute: typeof ClientsRouteWithChildren
   SaleRoute: typeof SaleRoute
   SalesRoute: typeof SalesRouteWithChildren
-  AuthorsAuthorRoute: typeof AuthorsAuthorRoute
+  AuthorsAuthorsRoute: typeof AuthorsAuthorsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -285,7 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClientsRoute: ClientsRouteWithChildren,
   SaleRoute: SaleRoute,
   SalesRoute: SalesRouteWithChildren,
-  AuthorsAuthorRoute: AuthorsAuthorRoute,
+  AuthorsAuthorsRoute: AuthorsAuthorsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
