@@ -12,6 +12,7 @@ import {
 } from "./book.model";
 import { BookEntity, BookId } from "./entities/book.entity";
 import { SaleModel } from "../sales/sales.model";
+ import type { ClientModel } from "../clients/clients.model";
 
 @Injectable()
 export class BookRepository {
@@ -51,39 +52,42 @@ export class BookRepository {
     return [booksWithSalesCount, totalCount];
   }
 
-  public async getBookById(
-    id: string,
-  ): Promise<(BookModel & { sales: SaleModel[] }) | undefined> {
-    const book = await this.bookRepository.findOne({
-      where: { id: id as BookId },
-    });
 
-    if (!book) {
-      return undefined;
-    }
+public async getBookById(
+  id: string,
+): Promise<(BookModel & { sales: SaleModel[]; clients: ClientModel[] }) | undefined> {
+  const book = await this.bookRepository.findOne({
+    where: { id: id as BookId },
+  });
 
-    const author = await this.authorRepository.findOne({
-      where: { id: book.authorId },
-    });
+  if (!book) return undefined;
 
-    if (!author) {
-      return undefined;
-    }
+  const author = await this.authorRepository.findOne({
+    where: { id: book.authorId },
+  });
 
-    const sales = await this.saleRepository.find({
-      where: { bookId: book.id },
-    });
+  if (!author) return undefined;
 
-    if (!sales) {
-      return undefined;
-    }
+  const sales = await this.saleRepository.find({
+    where: { bookId: book.id },
+    relations: { client: true },
+  });
+  
+  const clients: ClientModel[] = Array.from(
+    new Map(
+      sales.map((sale) => [sale.client.id, sale.client])
+    ).values()
+  );
 
-    return {
-      ...book,
-      author,
-      sales,
-    };
-  }
+  return {
+    ...book,
+    author,
+    sales,
+    clients,
+  };
+}
+
+
 
   public async createBook(book: CreateBookModel): Promise<BookModel> {
     const author = await this.authorRepository.findOne({

@@ -1,34 +1,33 @@
 import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
 import { useEffect, useState } from 'react'
 import { ArrowLeftOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { Skeleton, Space, Typography, Avatar, Row, Col, Input, Button, Divider } from 'antd'
+import { Skeleton, Space, Typography, Row, Col, Input, Button, Divider } from 'antd'
 import { Link } from '@tanstack/react-router'
 import { Route as booksRoute } from '../../routes/books'
 import type { UpdateBookModel } from '../BookModel'
 import { CreateSaleModal } from '../../sales/components/CreateSaleModal'
 import { useSaleProvider } from '../../sales/providers/useSaleProvider'
+import { useClientProvider } from '../../clients/providers/useClientProvider'
+import { ClientListItem } from '../../clients/components/ClientListItem'
 interface BookDetailsProps {
   id: string
   onUpdate: (id: string, input: UpdateBookModel) => void
 }
 
 export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
- 
 
-  const { isLoading, book, loadBook } = useBookDetailsProvider(id)
+  const { isLoading, book, loadBook } = useBookDetailsProvider(id);
+  const { clients, loadClientsWithBookId } = useClientProvider();
 
   const [isEditing, setIsEditing] = useState(false)
   const [title, setTitle] = useState('')
   const [author, setAuthors] = useState('')
-  
-  const { loadSales,createSale } = useSaleProvider()
-    useEffect(() => {
-      loadSales()
-    }, [])
+  const { loadSales, createSale } = useSaleProvider()
 
-  
   useEffect(() => {
     loadBook()
+    loadSales()
+    loadClientsWithBookId(id)
   }, [id])
 
   useEffect(() => {
@@ -37,6 +36,7 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
       setAuthors(book.author.firstName + ' ' + book.author.lastName)
     }
   }, [book])
+
 
   if (isLoading) return <Skeleton active />
 
@@ -49,8 +49,8 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
     if (book) {
       setTitle(book.title)
       setAuthors(book.author.firstName + ' ' + book.author.lastName)
-      
-      
+
+
     }
   }
 
@@ -80,7 +80,7 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
       </Link>
 
       <Row align="middle" style={{ width: '100%' }}>
-        
+
         <Col
           flex="auto"
           style={{
@@ -127,8 +127,8 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
           )}
         </Col>
         <Col flex="none">
-          <CreateSaleModal 
-            onCreate={createSale} 
+          <CreateSaleModal
+            onCreate={createSale}
             defaultBookId={book.id}
           />
         </Col>
@@ -148,8 +148,19 @@ export const BookDetails = ({ id, onUpdate }: BookDetailsProps) => {
 
       <Divider style={{ borderColor: '#393E46' }} />
 
-      
-      <Typography.Title level={4} style={{ color: 'white' }}>Any books</Typography.Title>
+
+      <Typography.Title level={4} style={{ color: 'white' }}>Clients who buy this book</Typography.Title>
+      {clients.length > 0 ? (
+        clients.map(client => (
+          <ClientListItem
+            key={client.id}
+            client={client}
+            showDelete={false}
+          />
+        ))
+      ) : (
+        <li>Aucun client trouvé</li>
+      )}
     </Space>
   )
 }

@@ -1,14 +1,21 @@
-import type { ClientModel } from '../ClientModel'
+import type { ClientModel, UpdateClientModel } from '../ClientModel'
 import { Col, Row, Avatar } from 'antd'
 import { useNavigate } from '@tanstack/react-router'
 import { DeleteClientModal } from './DeleteClientModal'
 
 interface ClientListItemProps {
   client: ClientModel
-  onDelete: (id: string) => void
+  onDelete?: (id: string) => void
+  onUpdate?: (id: string, input: UpdateClientModel) => void
+  showDelete?: boolean
 }
 
-export function ClientListItem({ client, onDelete }: ClientListItemProps) {
+export function ClientListItem({ 
+  client, 
+  onDelete,
+  showDelete = true,
+
+ }: ClientListItemProps) {
   const navigate = useNavigate()
 
   const handleRowClick = () => {
@@ -53,7 +60,8 @@ export function ClientListItem({ client, onDelete }: ClientListItemProps) {
         </div>
       </Col>
 
-      <Col
+    {showDelete && onDelete && (
+       <Col
         span={6}
         style={{
           display: 'flex',
@@ -61,10 +69,11 @@ export function ClientListItem({ client, onDelete }: ClientListItemProps) {
           gap: '.5rem',
           paddingRight: '1rem',
         }}
-        onClick={(e) => e.stopPropagation()} // empêche le clic sur le modal de déclencher la navigation
+        onClick={(e) => e.stopPropagation()}
       >
         <DeleteClientModal client={client} onDelete={onDelete} />
       </Col>
+    )}
     </Row>
   )
 }

@@ -5,7 +5,6 @@ import { Skeleton, Space, Typography, Avatar, Row, Col, Input, Button, Divider }
 import { Link } from '@tanstack/react-router'
 import { Route as clientsRoute } from '../../routes/clients'
 import type { UpdateClientModel } from '../ClientModel'
-import { useBookProvider } from '../../books/providers/useBookProvider'
 import { useSaleProvider } from '../../sales/providers/useSaleProvider'
 import { BookListItem } from '../../books/components/BookListItem'
 
@@ -15,9 +14,8 @@ interface ClientDetailsProps {
 }
 
 export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
-  // --- Hooks au tout début ---
+
   const { isLoading, client, loadClient } = useClientDetailsProvider(id)
-  const { loadBooks } = useBookProvider()
   const { sales, loadSalesWithClientId } = useSaleProvider()
 
   const [isEditing, setIsEditing] = useState(false)
@@ -25,11 +23,6 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [photoUrl, setPhotoUrl] = useState('')
-
-  // --- Effets ---
-  useEffect(() => {
-    loadBooks()
-  }, [])
 
   useEffect(() => {
     loadClient()
@@ -45,11 +38,9 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
     }
   }, [client])
 
-  // --- Gestion du chargement et client inexistant ---
   if (isLoading) return <Skeleton active />
   if (!client) return <Typography.Text style={{ color: 'white' }}>Aucun client trouvé.</Typography.Text>
 
-  // --- Gestion de l'édition ---
   const onCancel = () => {
     setIsEditing(false)
     if (client) {
@@ -66,7 +57,6 @@ export const ClientDetails = ({ id, onUpdate }: ClientDetailsProps) => {
     setIsEditing(false)
   }
 
-  // --- JSX ---
   return (
     <Space
       direction="vertical"

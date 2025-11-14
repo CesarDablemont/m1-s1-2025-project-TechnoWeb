@@ -41,5 +41,27 @@ export const useClientProvider = () => {
       .catch(err => console.error(err))
   }
 
-  return {  clients, loadClients, deleteClient, updateClient, createClient }
+  const loadClientsWithBookId = async (bookId: string) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/books/${bookId}`)
+      
+      if (response.data?.clients) {
+        setClients(response.data.clients)
+      } else {
+        setClients([])
+      }
+    } catch (err) {
+      console.error(err)
+      setClients([])
+    }
+  }
+
+  return { 
+    clients, 
+    loadClients, 
+    deleteClient, 
+    updateClient, 
+    createClient,
+    loadClientsWithBookId
+  }
 }
