@@ -61,7 +61,7 @@ export function PopularBook() {
            Popular Books
         </h2>
       </div>
-      {/* Books Bar */}
+
       <div style={{
         
         display: 'flex',

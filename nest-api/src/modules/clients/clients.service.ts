@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import {
   ClientModel,
   CreateClientModel,
   FilterClientsModel,
   UpdateClientModel,
   ClientModelWithSalesCount,
-} from './clients.model';
+} from "./clients.model";
 
-import { SaleModel } from '../sales/sales.model';
-import { ClientRepository } from './clients.respository';
+import { SaleModel } from "../sales/sales.model";
+import { ClientRepository } from "./clients.respository";
 
 @Injectable()
 export class ClientsService {
@@ -20,7 +20,9 @@ export class ClientsService {
     return this.clientRepository.getAllClients(input);
   }
 
-  public async getClientById(id: string): Promise<ClientModel & { sales: SaleModel[] }>  {
+  public async getClientById(
+    id: string,
+  ): Promise<ClientModel & { sales: SaleModel[] }> {
     return this.clientRepository.getClientById(id);
   }
 
