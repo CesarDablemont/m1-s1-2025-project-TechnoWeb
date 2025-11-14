@@ -19,7 +19,7 @@ import { Route as ClientsIndexRouteImport } from './routes/clients/index'
 import { Route as BooksIndexRouteImport } from './routes/books/index'
 import { Route as ClientsClientIdRouteImport } from './routes/clients.$clientId'
 import { Route as BooksBookIdRouteImport } from './routes/books.$bookId'
-import { Route as AuthorsAuthorRouteImport } from './routes/authors/author'
+import { Route as AuthorsAuthorsRouteImport } from './routes/authors/authors'
 
 const SalesRoute = SalesRouteImport.update({
   id: '/sales',
@@ -71,9 +71,9 @@ const BooksBookIdRoute = BooksBookIdRouteImport.update({
   path: '/$bookId',
   getParentRoute: () => BooksRoute,
 } as any)
-const AuthorsAuthorRoute = AuthorsAuthorRouteImport.update({
-  id: '/authors/author',
-  path: '/authors/author',
+const AuthorsAuthorsRoute = AuthorsAuthorsRouteImport.update({
+  id: '/authors/authors',
+  path: '/authors/authors',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -234,11 +234,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksBookIdRouteImport
       parentRoute: typeof BooksRoute
     }
-    '/authors/author': {
-      id: '/authors/author'
-      path: '/authors/author'
-      fullPath: '/authors/author'
-      preLoaderRoute: typeof AuthorsAuthorRouteImport
+    '/authors/authors': {
+      id: '/authors/authors'
+      path: '/authors/authors'
+      fullPath: '/authors/authors'
+      preLoaderRoute: typeof AuthorsAuthorsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
